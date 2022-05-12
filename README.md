@@ -1,11 +1,6 @@
 # ed3-backend
 ED3 Backend Service built with expressJS framework for NodeJS
 
-
-ED3 Backend Service built with expressJS framework for NodeJS
-
-ED3 Backend Service built with expressJS framework for NodeJS
-
 Clone the repo
 
 Run 'npm install'
