@@ -1,48 +1,21 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const path = require('path');
-const multer = require('multer');
-
+const secret=require("../config/secret")
 const router = express.Router();
-
+const path = require('path');
+const multer = require('multer')
 // const authRoute = require('./authRoute');
-
-const config = require('../config/secret');
-
-const isAuthenticated = (req, res, next) => {
-  const bearerHeader = req.headers.authorization;
-
-  if (typeof bearerHeader !== 'undefined') {
-    const bearer = bearerHeader.split(' ');
-
-    const bearerToken = bearer[1];
-
-    // verify the token
-
-    jwt.verify(bearerToken, config.jwtKey, (err, decoded) => {
-      if (err) {
-        res.sendStatus(403);
-      }
-
-      if (decoded) {
-        req.token = bearerToken;
-        next();
-      }
-    });
-  } else {
-    // forbidden
-    // console.log('there was a problem with the req');
-    res.sendStatus(403);
-  }
-};
-
-
+let SignUpController=require("../controller/SignUpController")
+let LoginController=require("../controller/LoginController")
+let Email_verifyController=require("../controller/Email_verifyController")
+let PasswordResetController=require("../controller/PasswordResetController")
+let ProfileController=require("../controller/ProfileLookupController")
+let ProfileUploadController=require("../controller/ProfileUploadController")
+let uploadController=require("../controller/UploadController")
 
 const checkFileName = (name) => {
-  if (name === 'profileImage') {
-    const cs = path.join(__dirname, '../public/uploads/images');
-
-    // return 'public/uploads/images';
+  if (name === 'contactDoc') {
+    const cs = path.join(__dirname, '../public/uploads/');
     return cs;
   }
 
@@ -65,11 +38,10 @@ const storage = multer.diskStorage({
 });
 
 const singleFileFilter = async (req, file, cb) => {
-  if (file.fieldname === 'profileImage') {
+  if (file.fieldname === 'contactDoc') {
     if (
-      file.mimetype === 'image/jpg'
-      || file.mimetype === 'image/jpeg'
-      || file.mimetype === 'image/png'
+      file.mimetype === 'text/csv'
+     
     ) {
       cb(null, true);
     } else {
@@ -87,8 +59,51 @@ const uploadFile = multer({
   fileFilter: singleFileFilter,
 });
 
-// router.post('/login', authRoute.loginPOST);
 
-// router.post('/register', authRoute.registerPOST);
 
+const isAuthenticated = (req, res, next) => {
+  const bearerHeader = req.cookies.token;
+
+  if (typeof bearerHeader !== 'undefined') {
+    // const bearer = bearerHeader.split(' ');
+
+    // const bearerToken = bearer[1];
+
+    // verify the token
+    console.log(bearerHeader)
+    jwt.verify(bearerHeader, secret.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      console.log(decoded)
+      if (err) {
+        res.sendStatus(403);
+      }
+
+      if (decoded) {
+        req.cookies.token ;
+        next();
+      }
+    });
+  } else {
+    // forbidden
+    // console.log('there was a problem with the req');
+    res.sendStatus(403);
+  }
+};
+
+
+
+router.post('/login', LoginController);
+
+router.post('/register', SignUpController);
+
+router.get('/verify/:id/user', Email_verifyController);
+
+router.get('/profile', isAuthenticated,ProfileController);
+
+router.post("/profile/upload",isAuthenticated,ProfileUploadController)
+
+router.get('/contacts', isAuthenticated,ProfileController);
+
+router.post('/contacts/upload',uploadFile.single("contactDoc"), isAuthenticated,uploadController);
+
+router.post('/password/reset', PasswordResetController);
 module.exports = router;

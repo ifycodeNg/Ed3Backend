@@ -7,7 +7,7 @@ const logger = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 
-require('./db/sequelize');
+const sequelize=require('./db/sequelize');
 
 const routes = require('./routes/api');
 
@@ -21,11 +21,11 @@ const corsOptions = {
   optionSuccessStatus: 200,
 };
 
+
+
 app.use(cors(corsOptions));
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -45,6 +45,10 @@ app.use((req, res, next) => {
 });
 
 app.use('/api', routes);
+
+sequelize.sequelize.sync().then(result=>{
+
+}).catch(err=>console.log(err))
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

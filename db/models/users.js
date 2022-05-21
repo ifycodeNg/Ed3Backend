@@ -19,13 +19,21 @@ module.exports = (sequelize, type) => {
       type: type.STRING,
       notEmpty: true,
     },
-    isConfirmed: {
+    Role: {
       type: type.STRING,
+      notEmpty: true
+    },
+    isConfirmed: {
+      type: type.INTEGER,
+      defaultValue:0,
       notEmpty: true,
     },
     isBlocked: {
-      type: type.STRING,
+      type: type.INTEGER,
       notEmpty: true,
+      defaultValue:0
+      
+      
     },
   };
   return sequelize.define('users', fields);
