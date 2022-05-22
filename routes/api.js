@@ -12,6 +12,8 @@ let PasswordResetController=require("../controller/PasswordResetController")
 let ProfileController=require("../controller/ProfileLookupController")
 let ProfileUploadController=require("../controller/ProfileUploadController")
 let uploadController=require("../controller/UploadController")
+let PasswordUpdateController=require("../controller/PasswordUpdateController")
+
 
 const checkFileName = (name) => {
   if (name === 'contactDoc') {
@@ -97,13 +99,18 @@ router.post('/register', SignUpController);
 
 router.get('/verify/:id/user', Email_verifyController);
 
-router.get('/profile', isAuthenticated,ProfileController);
+router.post('/password/update', PasswordUpdateController);
 
-router.post("/profile/upload",isAuthenticated,ProfileUploadController)
+router.post('/password/reset', PasswordResetController.PasswordGenLink); 
 
-router.get('/contacts', isAuthenticated,ProfileController);
+router.get('/password/reset/:userId/user', PasswordResetController.PasswordResetController); 
 
-router.post('/contacts/upload',uploadFile.single("contactDoc"), isAuthenticated,uploadController);
+/* router.get('/profile', isAuthenticated,ProfileController);
 
-router.post('/password/reset', PasswordResetController);
+// router.post("/profile/upload",isAuthenticated,ProfileUploadController)
+
+// router.get('/contacts', isAuthenticated,ProfileController);
+
+  router.post('/contacts/upload',uploadFile.single("contactDoc"), isAuthenticated,uploadController);
+*/ 
 module.exports = router;

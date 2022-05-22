@@ -5,6 +5,8 @@ const userModel = require('./models/users');
 const usermetaModel = require('./models/user_meta');
 const ElectionModel = require('./models/Election');
 const DirectoryModel = require('./models/directory');
+const TokenModel = require('./models/Token');
+
 const config = require('../config/secret');
 
 const sequelize = new Sequelize('ed3db', config.dbUser,
@@ -33,12 +35,13 @@ const User = userModel(sequelize, Sequelize);
 const Usermeta = usermetaModel(sequelize, Sequelize);
 const Directory = DirectoryModel(sequelize, Sequelize);
 const Election = ElectionModel(sequelize, Sequelize);
-
+const Token= TokenModel(sequelize, Sequelize)
 
 module.exports = {
   User,
   sequelize,
   Usermeta,
   Directory,
+  Token,
   Election
 };

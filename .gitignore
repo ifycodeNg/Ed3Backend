@@ -1,14 +1,14 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
+node_modules/
+.pnp/
 
 # testing
 /coverage
 
 # public
-/public
+/Public
 
 # production
 /build
@@ -16,6 +16,14 @@
 # misc
 .DS_Store
 *.pem
+
+controller/DirectoryController.js
+controller/UserController.js
+controller/UploadController.js
+
+utility/DirectoryService.js
+utility/DirectoryUploadService.js
+
 
 # debug
 npm-debug.log*
