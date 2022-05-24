@@ -35,14 +35,14 @@ const decrypt = await jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
         };
         let UserLookUp=await UserAccount.checkUser(req.user.id)
         if(UserLookUp == false){
-          res.json({message:"User Not Found"})
+          res.status(200).json({message:"User Not Found"})
         }
        else if(UserLookUp[0].dataValues.isConfirmed == 0){
-          res.json({message:"Email Not Verified"})
+          res.status(200).json({message:"Email Not Verified"})
         }
         else {
           let CreateProfile=await ProfileCreation.ProfileCreate(req,UserLookUp[0].dataValues.id,profileImage)
-          res.json({message:"Profile Created Successfully"})
+          res.status(201).json({message:"Profile Created Successfully"})
         }
         
         

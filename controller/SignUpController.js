@@ -17,14 +17,14 @@ let SignUp = async (req, res) => {
     </a>`;
 
     await EmailService.SendMail(email, "Verification Of Email", message);
-    res.json({
+    res.status(201).json({
       msg: "User Was Created Successfully Please Check Email For Verification"
     }
     )
 
   }
   else if (UserFound[0].email) {
-    return res.status(400).json({
+    return res.status(200).json({
       "errors": {
         "msg": "This Email already exist"
       }
