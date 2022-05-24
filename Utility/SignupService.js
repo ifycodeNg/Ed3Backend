@@ -52,13 +52,28 @@ let checkUserById = async (id) => {
 let CreateUser = async (req) => {
    let { email, password } = req.body
    let new_password = bcrypt.hashSync(password, 10)
+   let meta_obj = {}
+   meta_obj.role = "SuperAdmin"
+   meta_obj.is_Profile_Complete = 0
+
    token = crypto.randomBytes(32).toString("hex")
    let query = await User.User.create({
       email: email,
       password: new_password,
       confirmationToken: token
    })
+
    let id = query.dataValues.id
+   for (const key in meta_obj) {
+      let meta_query = await User.Usermeta.create({
+         userID: id,
+            key: key,
+            value: meta_obj[key]
+   
+      })
+      
+   }
+ 
    return {
 
       token: token,
@@ -66,10 +81,28 @@ let CreateUser = async (req) => {
 
    }
 }
+let checkMeta = async (UserId) => {
+   FindUserById = User.Usermeta.findAll({
+      where: {
+         userID: UserId
+      }
+   })
 
+   let AwaituserFound = await FindUserById
+
+   if (Array.isArray(AwaituserFound) && AwaituserFound.length == 0
+   ) {
+
+      return false
+
+   }
+
+   else return FindUserById
+}
 module.exports = {
    checkUser,
    CreateUser,
-   checkUserById
+   checkUserById,
+   checkMeta
 
 }

@@ -105,12 +105,12 @@ router.post('/password/reset', PasswordResetController.PasswordGenLink);
 
 router.get('/password/reset/:userId/user', PasswordResetController.PasswordResetController); 
 
-/* router.get('/profile', isAuthenticated,ProfileController);
+router.get('/profile', isAuthenticated,ProfileController);
 
-// router.post("/profile/upload",isAuthenticated,ProfileUploadController)
+router.post("/profile/upload",isAuthenticated,ProfileUploadController)
 
 // router.get('/contacts', isAuthenticated,ProfileController);
 
-  router.post('/contacts/upload',uploadFile.single("contactDoc"), isAuthenticated,uploadController);
-*/ 
+//router.post('/contacts/upload',uploadFile.single("contactDoc"), isAuthenticated,uploadController);
+
 module.exports = router;

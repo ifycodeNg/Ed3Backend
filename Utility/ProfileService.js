@@ -26,8 +26,23 @@ let ProfileLookup= async (Id)=>{
         })
         return userFound
      }
-     
+ 
+   let UpdateProfile = async (Id)=>{
+    let id=Id
+    userFound=  Model.Usermeta.update(
+        {
+        value:1,
+        },
+        {
+            where:{
+           id:id
+        }
+    
+    
+     })
+
+   }  
 
 module.exports={
-    ProfileCreate,ProfileLookup
+    ProfileCreate,ProfileLookup,UpdateProfile
 }

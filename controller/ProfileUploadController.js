@@ -1,5 +1,4 @@
 let ProfileCreation=require("../Utility/ProfileService")
-let User=require("../db/sequelize")
 let UserAccount=require("../Utility/SignupService")
 let jwt=require("jsonwebtoken")
 const secret=require("../config/secret")
@@ -9,9 +8,9 @@ let ProfileUploadController=async (req,res)=>{
     const token = req.cookies.token
 const decrypt = await jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
     req.user = {
-      id: decrypt.email,
+      id: decrypt.id,
     };
-    let UserLookUp=await UserAccount.checkUser(req.user.id)
+    let UserLookUp=await UserAccount.checkUserById(req.user.id)
     if(UserLookUp == false){
       res.json({message:"User Not Found"})
     }
@@ -20,6 +19,8 @@ const decrypt = await jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
     }
     else {
       let CreateProfile=await ProfileCreation.ProfileCreate(req,UserLookUp[0].dataValues.id)
+      let ProfileDetail=await ProfileCreation.ProfileLookup(UserLookUp[0].dataValues.id)
+      let UpdateProfile=await ProfileCreation.UpdateProfile( ProfileDetail[1].dataValues.id)
       res.json({message:"Profile Created Successfully"})
     }
     
