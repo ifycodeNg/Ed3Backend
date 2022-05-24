@@ -30,9 +30,11 @@ let Login = async (req, res) => {
 
     if (parseInt(User_Meta[1].dataValues.value) === 1) {
         let obj = {}
+        obj.isBlocked =UserFound[0].isBlocked
+        obj.isConfirmed = UserFound[0].isConfirmed
         obj.role = User_Meta[0].dataValues.value
         obj.id = User_Meta[0].dataValues.userID
-        obj.is_profile_complete = User_Meta[1].dataValues.value
+        obj.isProfileComplete = User_Meta[1].dataValues.value
         obj.firstName = User_Meta[2].dataValues.value
         obj.lastName = User_Meta[3].dataValues.value
 
@@ -40,16 +42,18 @@ let Login = async (req, res) => {
         let token = jwt.sign({ id: obj.id, role: obj.role, is_profile_complete: obj.is_profile_completed }, secret.ACCESS_TOKEN_SECRET, {
             expiresIn: '7d'
         })
-        res.cookie('token', token, {
-            secure: false, // set to true if your using https
-            httpOnly: true,
-        });
+        obj.token=token
+       
         res.status(201).json({
-            firstName: obj.firstName,
-            lastName: obj.lastName,
+            firstName: obj.firstName ,
+            lastName: obj.lastName ,
             role: obj.role,
-            is_profile_complete: obj.is_profile_complete,
-            profile_pics: obj.profile_pics || null
+            token: token,
+            isProfileComplete: obj.isProfileComplete,
+            profile_pics: obj.profile_pics || null ,
+            isBlocked : obj.isBlocked ,
+            isConfirmed : obj.isConfirmed
+
 
         }
         )
@@ -59,25 +63,24 @@ let Login = async (req, res) => {
         let obj = {}
         obj.role = User_Meta[0].dataValues.value
         obj.id = User_Meta[0].dataValues.userID
-        obj.is_profile_complete = User_Meta[1].dataValues.value || null
+        obj.isBlocked =UserFound[0].isBlocked
+        obj.isConfirmed = UserFound[0].isConfirmed
+        obj.isProfileComplete = User_Meta[1].dataValues.value
 
 
-
-        console.log(obj)
-        // console.log(User_Meta)
         let token = jwt.sign({ id: obj.id, role: obj.role, is_profile_complete: obj.is_profile_completed }, secret.ACCESS_TOKEN_SECRET, {
             expiresIn: '7d'
         })
-        res.cookie('token', token, {
-            secure: false, // set to true if your using https
-            httpOnly: true,
-        });
+       
         res.status(201).json({
             firstName: obj.firstName || null,
             lastName: obj.lastName || null,
             role: obj.role,
-            is_profile_complete: obj.is_profile_complete,
-            profile_pics: obj.profile_pics || null
+            token: token,
+            isProfileComplete: obj.isProfileComplete,
+            profile_pics: obj.profile_pics || null ,
+            isBlocked : obj.isBlocked ,
+            isConfirmed : obj.isConfirmed
 
         }
         )
