@@ -9,9 +9,9 @@ let ProfileController=async (req,res)=>{
 
   const token = authorization.split(' ')[1];
 
-  const { userId } = jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
-console.log(userId)
-  let UserFound=await User.checkUserById(userId)
+  const { UserId } = jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
+
+  let UserFound=await User.checkUserById(UserId)
     if(UserFound == false){
       res.json({message:"User Not Found"})
       

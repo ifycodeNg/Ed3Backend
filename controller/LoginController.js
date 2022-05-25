@@ -30,21 +30,25 @@ let Login = async (req, res) => {
 
         const UserInfo = UserFound[0].dataValues;
         let Uid=UserFound[0].dataValues.id;
+
+
         const UserObj={}
         let isProfileComplete=await ProfileService.getInfo(Uid,"isProfileComplete")
         const firstname=await ProfileService.getInfo(Uid,"firstName")
         const lastName=await ProfileService.getInfo(Uid,"lastName")
+        const role=await ProfileService.getInfo(Uid,"role")
         let gender=await ProfileService.getInfo(Uid,"gender")
           UserObj.userId = UserInfo.id
           UserObj.isConfirmed = UserInfo.isConfirmed
           UserObj.isBlocked = UserInfo.isBlocked
           UserObj.email = UserInfo.email
+          UserObj.role = role
   
         
         
         let ProfilePics=await ProfileService.getInfo(Uid,"ProfilePics") 
 
-        console.log(lastName)
+    
 
        UserObj.isProfileComplete= parseInt(isProfileComplete)
   
@@ -55,7 +59,7 @@ let Login = async (req, res) => {
         UserObj.ProfilePics=ProfilePics
 
 
-        let token = jwt.sign({ UserId: UserObj.id, role: UserObj.role, isProfileComplete: UserObj.isProfileComplete }, secret.ACCESS_TOKEN_SECRET, {
+        let token = jwt.sign({ UserId: UserObj.userId, role: UserObj.role, isProfileComplete: UserObj.isProfileComplete }, secret.ACCESS_TOKEN_SECRET, {
             expiresIn: '7d'
         })
         UserObj.token=token

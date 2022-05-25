@@ -3,13 +3,14 @@ let jwt = require("jsonwebtoken")
 
 
 let PasswordResetController = async (req, res) => {
-  const token = req.cookies.token
-  const decrypt = await jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
-  req.user = {
-    id: decrypt.email,
-  };
+  const authorization = req.headers['authorization'];
+  if (!authorization) throw new Error('You need to login.');
+
+  const token = authorization.split(' ')[1];
+
+  const { UserId } = jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
   const password = req.body.password
-  let passwordChange = await Changepassword(req.user.id, password)
+  let passwordChange = await Changepassword(UserId, password)
 
   if (passwordChange == undefined) {
     res.json({
