@@ -34,7 +34,7 @@ let Login = async (req, res) => {
         obj.isConfirmed = UserFound[0].isConfirmed
         obj.role = User_Meta[0].dataValues.value
         obj.id = User_Meta[0].dataValues.userID
-        obj.isProfileComplete = User_Meta[1].dataValues.value
+        obj.isProfileComplete = parseInt(User_Meta[1].dataValues.value) 
         obj.firstName = User_Meta[2].dataValues.value
         obj.lastName = User_Meta[3].dataValues.value
 
@@ -48,9 +48,9 @@ let Login = async (req, res) => {
             firstName: obj.firstName ,
             lastName: obj.lastName ,
             role: obj.role,
-            token: token,
-            isProfileComplete: obj.isProfileComplete,
-            profile_pics: obj.profile_pics || null ,
+            jwtoken: token,
+            isProfileComplete: parseInt(obj.isProfileComplete) ,
+            profilecPics: obj.profile_pics || null ,
             isBlocked : obj.isBlocked ,
             isConfirmed : obj.isConfirmed
 
@@ -76,9 +76,9 @@ let Login = async (req, res) => {
             firstName: obj.firstName || null,
             lastName: obj.lastName || null,
             role: obj.role,
-            token: token,
-            isProfileComplete: obj.isProfileComplete,
-            profile_pics: obj.profile_pics || null ,
+            jwtoken: token,
+            isProfileComplete: parseInt(obj.isProfileComplete) ,
+            profilePics: obj.profile_pics || null ,
             isBlocked : obj.isBlocked ,
             isConfirmed : obj.isConfirmed
 
