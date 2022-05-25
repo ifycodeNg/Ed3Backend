@@ -1,57 +1,30 @@
-let ProfileCreation=require("../Utility/ProfileService")
-let UserAccount=require("../Utility/SignupService")
-let jwt=require("jsonwebtoken")
-const secret=require("../config/secret")
+/* eslint-disable no-unused-vars */
+const jwt = require('jsonwebtoken');
+const ProfileCreation = require('../Utility/ProfileService');
+const UserAccount = require('../Utility/SignupService');
+const secret = require('../config/secret');
 
-let ProfileUploadController=async (req,res)=>{
+const ProfileUploadController = async (req, res) => {
   if (!req.file) {
-    const token = req.cookies.token
-const decrypt = await jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
-    req.user = {
-      id: decrypt.id,
-    };
-    let UserLookUp=await UserAccount.checkUserById(req.user.id)
-    if(UserLookUp == false){
-      res.json({message:"User Not Found"})
+    // eslint-disable-next-line prefer-destructuring
+    const authorization = req.headers['authorization'];
+    if (!authorization) throw new Error('You need to login.');
+  
+    const token = authorization.split(' ')[1];
+  
+    const { userId } = jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
+    const UserLookUp = await UserAccount.checkUserById(userId);
+    if (UserLookUp == false) {
+      // eslint-disable-next-line key-spacing
+      res.json({ message: 'User Not Found' });
+    } else if (UserLookUp[0].dataValues.isConfirmed === 0) {
+      res.json({ message: 'Email Not Verified' });
+    } else {
+      const CreateProfile = await ProfileCreation.ProfileCreate(req, UserLookUp[0].dataValues.id);
+      const ProfileDetail = await ProfileCreation.ProfileLookup(UserLookUp[0].dataValues.id);
+      const UpdateProfile = await ProfileCreation.UpdateProfile(ProfileDetail[0].id);
+      res.json({ message: 'Profile Created Successfully' });
     }
-   else if(UserLookUp[0].dataValues.isConfirmed == 0){
-      res.json({message:"Email Not Verified"})
-    }
-    else {
-      let CreateProfile=await ProfileCreation.ProfileCreate(req,UserLookUp[0].dataValues.id)
-      let ProfileDetail=await ProfileCreation.ProfileLookup(UserLookUp[0].dataValues.id)
-      let UpdateProfile=await ProfileCreation.UpdateProfile( ProfileDetail[1].dataValues.id)
-      res.json({message:"Profile Created Successfully"})
-    }
-    
-   
-
-  } else {
-    let profileImage=req.file.path
-    const token = req.cookies.token
-    const decrypt = await jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
-        req.user = {
-          id: decrypt.email,
-        };
-        let UserLookUp=await UserAccount.checkUser(req.user.id)
-        if(UserLookUp == false){
-          res.status(200).json({message:"User Not Found"})
-        }
-       else if(UserLookUp[0].dataValues.isConfirmed == 0){
-          res.status(200).json({message:"Email Not Verified"})
-        }
-        else {
-          let CreateProfile=await ProfileCreation.ProfileCreate(req,UserLookUp[0].dataValues.id,profileImage)
-          res.status(201).json({message:"Profile Created Successfully"})
-        }
-        
-        
-  }
-
-
-
-
-    
-
-}
-module.exports=ProfileUploadController
+  } 
+};
+module.exports = ProfileUploadController;

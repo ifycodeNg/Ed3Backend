@@ -17,7 +17,7 @@ let PasswordGenLink = async (req, res) => {
   if (UserFound) {
     let userId = UserFound[0].dataValues.id
     const message = `<a 
-    href="${config.baseUrl}/api/password/reset/${userId}/user?token=${token}">
+    href="http://${config.baseUrl}/api/password/reset/${userId}/user?token=${token}">
     Click here to change your password
     </a>`;
 

@@ -10,6 +10,7 @@ let LoginController=require("../controller/LoginController")
 let Email_verifyController=require("../controller/Email_verifyController")
 let PasswordResetController=require("../controller/PasswordResetController")
 let ProfileController=require("../controller/ProfileLookupController")
+let ProfilePerUser=require("../controller/ProfilePerUser")
 let ProfileUploadController=require("../controller/ProfileUploadController")
 //let uploadController=require("../controller/UploadController")
 let PasswordUpdateController=require("../controller/PasswordUpdateController")
@@ -64,16 +65,15 @@ const uploadFile = multer({
 
 
 const isAuthenticated = (req, res, next) => {
-  const bearerHeader = req.cookies.token;
+  const bearerHeader = req.headers['authorization'];
 
   if (typeof bearerHeader !== 'undefined') {
-    // const bearer = bearerHeader.split(' ');
+    const bearer = bearerHeader.split(' ');
 
-    // const bearerToken = bearer[1];
+    const bearerToken = bearer[1];
 
-    // verify the token
-    console.log(bearerHeader)
-    jwt.verify(bearerHeader, secret.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    
+    jwt.verify(bearerToken, secret.ACCESS_TOKEN_SECRET, (err, decoded) => {
       console.log(decoded)
       if (err) {
         res.sendStatus(403);
@@ -97,13 +97,15 @@ router.post('/login', LoginController);
 
 router.post('/register', SignUpController);
 
-router.get('/verify/:id/user', Email_verifyController);
+router.get('/verify/:id/user',Email_verifyController);
 
-router.post('/password/update', PasswordUpdateController);
+router.post('/password/update',isAuthenticated, PasswordUpdateController);
 
 router.post('/password/reset', PasswordResetController.PasswordGenLink); 
 
 router.get('/password/reset/:userId/user', PasswordResetController.PasswordResetController); 
+
+router.get('/profile/:userId', isAuthenticated,ProfilePerUser);
 
 router.get('/profile', isAuthenticated,ProfileController);
 

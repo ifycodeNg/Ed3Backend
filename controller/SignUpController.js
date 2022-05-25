@@ -12,7 +12,7 @@ let SignUp = async (req, res) => {
     let token = await createUser
 
     const message = `<a 
-    href="${config.baseUrl}/api/verify/${token.id}/user?token=${token.token}">
+    href="http://${config.baseUrl}/api/verify/${token.id}/user?token=${token.token}">
     Click Here Verify your Email Address
     </a>`;
 

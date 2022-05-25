@@ -52,9 +52,9 @@ let checkUserById = async (id) => {
 let CreateUser = async (req) => {
    let { email, password } = req.body
    let new_password = bcrypt.hashSync(password, 10)
-   let meta_obj = {}
-   meta_obj.role = "SuperAdmin"
-   meta_obj.is_Profile_Complete = 0
+   let metaObj = {}
+   metaObj.role = "SuperAdmin"
+   metaObj.isProfileComplete = parseInt(0)
 
    token = crypto.randomBytes(32).toString("hex")
    let query = await User.User.create({
@@ -64,11 +64,11 @@ let CreateUser = async (req) => {
    })
 
    let id = query.dataValues.id
-   for (const key in meta_obj) {
+   for (const key in metaObj) {
       let meta_query = await User.Usermeta.create({
          userID: id,
             key: key,
-            value: meta_obj[key]
+            value: metaObj[key]
    
       })
       

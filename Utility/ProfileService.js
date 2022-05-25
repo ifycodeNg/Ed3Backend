@@ -20,11 +20,22 @@ let ProfileCreate=async(req,Id)=>{
 let ProfileLookup= async (Id)=>{
      
       userFound=  Model.Usermeta.findAll({
+         raw:true,
            where:{
-            userID:Id
+            userID:Id,
+            key:"isProfileComplete"
            }
         })
-        return userFound
+        let AwaituserFound = await userFound
+
+        if (Array.isArray(AwaituserFound) && AwaituserFound.length == 0
+        ) {
+     
+           return false
+     
+        }
+     
+        else return AwaituserFound
      }
  
    let UpdateProfile = async (Id)=>{
@@ -43,6 +54,28 @@ let ProfileLookup= async (Id)=>{
 
    }  
 
+
+
+   let getInfo= async (Id,key)=>{
+     
+  
+    userFound=  Model.Usermeta.findAll({
+        raw:true,
+         where:{
+          userID:Id,
+            key:key
+         }
+      })
+      let AwaituserFound = await userFound
+      if (Array.isArray(AwaituserFound) && AwaituserFound.length == 0
+      ) {
+   
+         return null
+   
+      }
+   
+      else return AwaituserFound[0].value
+   }
 module.exports={
-    ProfileCreate,ProfileLookup,UpdateProfile
+    ProfileCreate,ProfileLookup,UpdateProfile,getInfo
 }
