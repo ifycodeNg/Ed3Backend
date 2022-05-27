@@ -1,75 +1,70 @@
-const User = require("../db/sequelize")
-const bcrypt = require("bcrypt")
-let userFound
-let crypto = require("crypto")
-let token
+const User = require('../db/sequelize');
+const bcrypt = require('bcrypt');
 
+let userFound;
+const crypto = require('crypto');
 
-let checkUser = async (req) => {
-   let email = req
+let token;
 
-   userFound = User.User.findAll({
-      where: {
-         email: email
-      }
-   })
+const checkUser = async (req) => {
+  const email = req;
 
-   let AwaituserFound = await userFound
+  userFound = User.User.findAll({
+    where: {
+      email,
+    },
+  });
 
-   if (Array.isArray(AwaituserFound) && AwaituserFound.length == 0
-   ) {
+  const AwaituserFound = await userFound;
 
-      return false
+  if (Array.isArray(AwaituserFound) && AwaituserFound.length == 0
+  ) {
+    return false;
+  }
 
-   }
+  return userFound;
+};
 
-   else return userFound
-}
+const checkUserById = async (id) => {
+  const Id = id;
 
-let checkUserById = async (id) => {
-   let Id = id
+  FindUserById = User.User.findAll({
+    where: {
+      id: Id,
+    },
+  });
 
-   FindUserById = User.User.findAll({
-      where: {
-         id: Id
-      }
-   })
+  const AwaituserFound = await FindUserById;
 
-   let AwaituserFound = await FindUserById
+  if (Array.isArray(AwaituserFound) && AwaituserFound.length == 0
+  ) {
+    return false;
+  }
 
-   if (Array.isArray(AwaituserFound) && AwaituserFound.length == 0
-   ) {
+  return FindUserById;
+};
 
-      return false
+const CreateUser = async (req) => {
+  const { email, password } = req.body;
+  const new_password = bcrypt.hashSync(password, 10);
+  token = crypto.randomBytes(32).toString('hex');
+  const query = await User.User.create({
+    email,
+    password: new_password,
+    confirmationToken: token,
+  });
+  const { id } = query.dataValues;
+  return {
 
-   }
+    token,
+    id,
 
-   else return FindUserById
-}
-
-
-
-let CreateUser = async (req) => {
-   let { email, password } = req.body
-   let new_password = bcrypt.hashSync(password, 10)
-   token = crypto.randomBytes(32).toString("hex")
-   let query = await User.User.create({
-      email: email,
-      password: new_password,
-      confirmationToken: token
-   })
-   let id = query.dataValues.id
-   return {
-
-      token: token,
-      id: id
-
-   }
-}
+  };
+};
 
 module.exports = {
-   checkUser,
-   CreateUser,
-   checkUserById
+  checkUser,
+  CreateUser,
+  checkUserById,
 
-}
+};
