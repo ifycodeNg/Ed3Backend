@@ -27,35 +27,31 @@ const Login = async (req, res) => {
     });
   }
 
-  const UserInfo = UserFound[0].dataValues;
-  const Uid = UserFound[0].dataValues.id;
+  const UserInfo = UserFound[0];
+  const Uid = UserFound[0].id;
 
   const UserObj = {};
-  const isProfileComplete = await ProfileService.getInfo(Uid, 'isProfileComplete');
-  const firstname = await ProfileService.getInfo(Uid, 'firstName');
-  const lastName = await ProfileService.getInfo(Uid, 'lastName');
-  const role = await ProfileService.getInfo(Uid, 'role');
-  const gender = await ProfileService.getInfo(Uid, 'gender');
+
+  UserObj.isProfileComplete = parseInt(await ProfileService.getInfo(Uid, 'isProfileComplete'));
+  UserObj.firstname = await ProfileService.getInfo(Uid, 'firstName');
+  UserObj.lastName = await ProfileService.getInfo(Uid, 'lastName');
+  UserObj.role = await ProfileService.getInfo(Uid, 'role');
+  UserObj.gender = await ProfileService.getInfo(Uid, 'gender');
   UserObj.userId = UserInfo.id;
   UserObj.isConfirmed = UserInfo.isConfirmed;
+  UserObj.telephone = parseInt(await ProfileService.getInfo(Uid, 'telephone'));
   UserObj.isBlocked = UserInfo.isBlocked;
   UserObj.email = UserInfo.email;
-  UserObj.role = role;
+ 
 
-  const ProfilePic = await ProfileService.getInfo(Uid, 'profilePic');
+  UserObj.ProfilePics = await ProfileService.getInfo(Uid, 'profilePic');
 
-  UserObj.isProfileComplete = parseInt(isProfileComplete);
-
-  UserObj.firstname = firstname;
-  UserObj.lastName = lastName;
-  UserObj.gender = gender;
-
-  UserObj.ProfilePics = ProfilePic;
+  
 
   const token = jwt.sign({ UserId: UserObj.userId, role: UserObj.role, isProfileComplete: UserObj.isProfileComplete }, secret.ACCESS_TOKEN_SECRET, {
     expiresIn: '7d',
   });
-  UserObj.token = token;
+  UserObj.jwtoken = token;
 
   res.status(201).json(
     UserObj,
