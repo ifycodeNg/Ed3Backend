@@ -11,10 +11,12 @@ const LoginController = require('../controller/LoginController');
 const EmailVerifyController = require('../controller/EmailVerifyController');
 const PasswordResetController = require('../controller/PasswordResetController');
 const ProfilePerUser = require('../controller/ProfilePerUser');
-const ProfileUploadController = require('../controller/ProfileUploadController');
+const ProfileUploadController = require('../controller/ProfileCreateController');
 const PasswordUpdateController = require('../controller/PasswordUpdateController');
 const AllUserProfileController = require('../controller/UsersProfileController');
 const uploadFileController = require('../controller/FileUploadController');
+const CreateUserController=require('../controller/CreateUserController')
+
 
 const checkFileName = (name) => {
   if (name === 'contactDoc') {
@@ -119,5 +121,7 @@ router.get('/profile', isAuthenticated, AllUserProfileController);
 router.post('/fileupload', isAuthenticated, uploadFile.single('profilePic'), uploadFileController);
 
 router.post('/profile', isAuthenticated, ProfileUploadController);
+
+router.post('/create/user', isAuthenticated, CreateUserController);
 
 module.exports = router;

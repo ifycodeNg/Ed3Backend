@@ -1,5 +1,5 @@
 const ProfileService = require('../Utility/ProfileService');
-const User = require('../Utility/SignupService');
+const User = require('../Utility/UserService');
 
 const AllUserProfile = async (req, res) => {
   const UserFound = await User.getAllUsers();
@@ -26,6 +26,7 @@ const AllUserProfile = async (req, res) => {
       UserObj.isProfileComplete = parseInt(await ProfileService.getInfo(UID, 'isProfileComplete'));
       UserObj.profilePic = await ProfileService.getInfo(UID, 'profilePic');
       UserObj.role = await ProfileService.getInfo(UID, 'role');
+      UserObj.telephone = parseInt(await ProfileService.getInfo(UID, 'telephone'));
 
       Users.push(UserObj);
     }

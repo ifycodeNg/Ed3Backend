@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const Changepassword = require('../Utility/PasswordService');
-const UserService = require('../Utility/SignupService');
+const UserService = require('../Utility/UserService');
 const config = require('../config/secret');
 const EmailService = require('../Utility/EmailService');
 const TokenService = require('../Utility/TokenService');

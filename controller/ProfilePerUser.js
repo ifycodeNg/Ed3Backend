@@ -1,5 +1,5 @@
 const ProfileService = require('../Utility/ProfileService');
-const User = require('../Utility/SignupService');
+const User = require('../Utility/UserService');
 
 const ProfilePerUserController = async (req, res) => {
   const userId = req.params.id;
@@ -8,30 +8,25 @@ const ProfilePerUserController = async (req, res) => {
     res.status(200).json({ message: 'User Not Found' });
   } else {
     const UserObj = {};
-    const UserInfo = UserFound[0].dataValues;
-    UserObj.userId = UserFound[0].dataValues.id;
-    UserObj.isConfirmed = UserFound[0].dataValues.isConfirmed;
-    UserObj.isConfirmed = UserFound[0].dataValues.isConfirmed;
-    UserObj.isBlocked = UserFound[0].dataValues.isBlocked;
-    UserObj.email = UserFound[0].dataValues.email;
+    const UserInfo = UserFound[0];
+    UserObj.userId = UserFound[0].id;
+    UserObj.isConfirmed = UserFound[0].isConfirmed;
+    UserObj.isConfirmed = UserFound[0].isConfirmed;
+    UserObj.isBlocked = UserFound[0].isBlocked;
+    UserObj.email = UserFound[0].email;
 
-    const Uid = UserFound[0].dataValues.id;
+    const Uid = UserFound[0].id;
 
-    const isProfileComplete = await ProfileService.getInfo(Uid, 'isProfileComplete');
-    const firstname = await ProfileService.getInfo(Uid, 'firstName');
-    const lastName = await ProfileService.getInfo(Uid, 'lastName');
-    const gender = await ProfileService.getInfo(Uid, 'gender');
-    const ProfilePics = await ProfileService.getInfo(Uid, 'ProfilePic');
+    UserObj.isProfileComplete = parseInt(await ProfileService.getInfo(Uid, 'isProfileComplete'));
+    UserObj.firstname = await ProfileService.getInfo(Uid, 'firstName');
+    UserObj.lastName = await ProfileService.getInfo(Uid, 'lastName');
+    UserObj.gender = await ProfileService.getInfo(Uid, 'gender');
+    UserObj.ProfilePics = await ProfileService.getInfo(Uid, 'profilePic');
+    UserObj.telephone = parseInt(await ProfileService.getInfo(Uid, 'telephone'));
     UserObj.userId = UserInfo.id;
     UserObj.isConfirmed = UserInfo.isConfirmed;
     UserObj.isBlocked = UserInfo.isBlocked;
     UserObj.email = UserInfo.email;
-
-    UserObj.firstname = firstname;
-    UserObj.lastName = lastName;
-    UserObj.gender = gender;
-    UserObj.isProfileComplete = parseInt(isProfileComplete);
-    UserObj.ProfilePics = ProfilePics;
 
     res.status(201).json(UserObj);
   }

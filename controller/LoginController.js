@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const UserService = require('../Utility/SignupService');
+const UserService = require('../Utility/UserService');
 const secret = require('../config/secret');
 const ProfileService = require('../Utility/ProfileService');
 

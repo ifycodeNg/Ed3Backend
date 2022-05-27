@@ -10,6 +10,7 @@ const checkUser = async (req) => {
   const email = req;
 
   userFound = User.User.findAll({
+    raw: true,
     where: {
       email,
     },
@@ -29,6 +30,7 @@ const checkUserById = async (id) => {
   const Id = id;
 
   FindUserById = User.User.findAll({
+    raw : true,
     where: {
       id: Id,
     },
@@ -63,15 +65,15 @@ const getAllUsers = async () => {
 
 const CreateUser = async (req) => {
   const { email, password } = req.body;
-  const new_password = bcrypt.hashSync(password, 10);
+  const newPassword = bcrypt.hashSync(password, 10);
   const metaObj = {};
   metaObj.role = 'user';
-  metaObj.isProfileComplete = parseInt(0);
+  metaObj.isProfileComplete = 0;
 
   token = crypto.randomBytes(32).toString('hex');
   const query = await User.User.create({
     email,
-    password: new_password,
+    password: newPassword,
     confirmationToken: token,
   });
 
@@ -108,11 +110,44 @@ const checkMeta = async (UserId) => {
 
   return FindUserById;
 };
+const create = async (req) => {
+  const { email, password } = req.body;
+  const UserInfo = req.body;
+  const newPassword = bcrypt.hashSync(password, 10);
+  const metaObj = {};
+  metaObj.role = 'user';
+  metaObj.isProfileComplete = 1;
+
+  metaObj.firstName = UserInfo.firstName;
+  metaObj.lastName = UserInfo.lastName;
+  metaObj.middleName = UserInfo.middleName;
+  metaObj.telephone = UserInfo.telephone;
+  metaObj.gender = UserInfo.gender;
+
+  token = crypto.randomBytes(32).toString('hex');
+  const query = await User.User.create({
+    email,
+    password: newPassword,
+    confirmationToken: token,
+    isConfirmed: 1,
+  });
+
+  const { id } = query.dataValues;
+  for (const key in metaObj) {
+    const meta_query = await User.Usermeta.create({
+      userID: id,
+      key,
+      value: metaObj[key],
+
+    });
+  }
+};
 module.exports = {
   checkUser,
   CreateUser,
   checkUserById,
   checkMeta,
   getAllUsers,
+  create,
 
 };

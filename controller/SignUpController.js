@@ -1,11 +1,11 @@
-const UserService = require('../Utility/SignupService');
+const UserService = require('../Utility/UserService');
 const config = require('../config/secret');
 const EmailService = require('../Utility/EmailService');
 
 const SignUp = async (req, res) => {
   const UserFound = await UserService.checkUser(req.body.email);
 
-  if (UserFound[0] == undefined) {
+  if (UserFound[0] === undefined) {
     const createUser = UserService.CreateUser(req);
     const { email } = req.body;
     const token = await createUser;
