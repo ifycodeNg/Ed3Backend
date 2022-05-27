@@ -1,27 +1,22 @@
-let bcrypt=require("bcrypt");
+const bcrypt = require('bcrypt');
 
-const User=require("../db/sequelize")
+const User = require('../db/sequelize');
 
-let Changepassword=async (email,password)=>{
+const Changepassword = async (email, password) => {
+  const newPassword = bcrypt.hashSync(password, 10);
 
-let new_password= bcrypt.hashSync(password,10)
-
-let id=email
-
-userFound=  User.User.update(
+  const id = email;
+  userFound = User.User.update(
     {
-    password:new_password,
+      password: newPassword,
     },
     {
-        where:{
-       email:id
-    }
+      where: {
+        email: id,
+      },
 
+    },
+  );
+};
 
- })
-
-
-
-}
-
-module.exports=Changepassword
+module.exports = Changepassword;

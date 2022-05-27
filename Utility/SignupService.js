@@ -44,16 +44,47 @@ const checkUserById = async (id) => {
   return FindUserById;
 };
 
+const getAllUsers = async () => {
+  userFound = User.User.findAll({
+    raw: true,
+    where: {
+    },
+  });
+
+  const AwaituserFound = await userFound;
+
+  if (Array.isArray(AwaituserFound) && AwaituserFound.length == 0
+  ) {
+    return false;
+  }
+
+  return userFound;
+};
+
 const CreateUser = async (req) => {
   const { email, password } = req.body;
   const new_password = bcrypt.hashSync(password, 10);
+  const metaObj = {};
+  metaObj.role = 'user';
+  metaObj.isProfileComplete = parseInt(0);
+
   token = crypto.randomBytes(32).toString('hex');
   const query = await User.User.create({
     email,
     password: new_password,
     confirmationToken: token,
   });
+
   const { id } = query.dataValues;
+  for (const key in metaObj) {
+    const meta_query = await User.Usermeta.create({
+      userID: id,
+      key,
+      value: metaObj[key],
+
+    });
+  }
+
   return {
 
     token,
@@ -61,10 +92,27 @@ const CreateUser = async (req) => {
 
   };
 };
+const checkMeta = async (UserId) => {
+  FindUserById = User.Usermeta.findAll({
+    where: {
+      userID: UserId,
+    },
+  });
 
+  const AwaituserFound = await FindUserById;
+
+  if (Array.isArray(AwaituserFound) && AwaituserFound.length == 0
+  ) {
+    return false;
+  }
+
+  return FindUserById;
+};
 module.exports = {
   checkUser,
   CreateUser,
   checkUserById,
+  checkMeta,
+  getAllUsers,
 
 };

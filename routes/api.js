@@ -1,23 +1,29 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const secret=require("../config/secret")
+const secret = require('../config/secret');
+
 const router = express.Router();
 const path = require('path');
-const multer = require('multer')
-// const authRoute = require('./authRoute');
-let SignUpController=require("../controller/SignUpController")
-let LoginController=require("../controller/LoginController")
-let Email_verifyController=require("../controller/Email_verifyController")
-let PasswordResetController=require("../controller/PasswordResetController")
-let ProfileController=require("../controller/ProfileLookupController")
-let ProfileUploadController=require("../controller/ProfileUploadController")
-let uploadController=require("../controller/UploadController")
-let PasswordUpdateController=require("../controller/PasswordUpdateController")
+const multer = require('multer');
 
+const SignUpController = require('../controller/SignUpController');
+const LoginController = require('../controller/LoginController');
+const EmailVerifyController = require('../controller/EmailVerifyController');
+const PasswordResetController = require('../controller/PasswordResetController');
+const ProfilePerUser = require('../controller/ProfilePerUser');
+const ProfileUploadController = require('../controller/ProfileUploadController');
+const PasswordUpdateController = require('../controller/PasswordUpdateController');
+const AllUserProfileController = require('../controller/UsersProfileController');
+const uploadFileController = require('../controller/FileUploadController');
 
 const checkFileName = (name) => {
   if (name === 'contactDoc') {
-    const cs = path.join(__dirname, '../public/uploads/');
+    const cs = path.join(__dirname, '../uploads/');
+    return cs;
+  }
+  if (name === 'profilePic') {
+    console.log('Single file');
+    const cs = path.join(__dirname, '../uploads/');
     return cs;
   }
 
@@ -40,15 +46,22 @@ const storage = multer.diskStorage({
 });
 
 const singleFileFilter = async (req, file, cb) => {
+  console.log('Single file');
   if (file.fieldname === 'contactDoc') {
     if (
       file.mimetype === 'text/csv'
-     
+
     ) {
       cb(null, true);
     } else {
       req.fileValidationError = 'Forbidden Extension';
       return cb(null, false, req.fileValidationError);
+    }
+  } else if (file.fieldname === 'profilePic') {
+    console.log('Single file');
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      console.log('Single file');
+      cb(null, true);
     }
   } else {
     req.fileValidationError = 'Forbidden Extension';
@@ -61,26 +74,22 @@ const uploadFile = multer({
   fileFilter: singleFileFilter,
 });
 
-
-
 const isAuthenticated = (req, res, next) => {
-  const bearerHeader = req.cookies.token;
+  const bearerHeader = req.headers.authorization;
 
   if (typeof bearerHeader !== 'undefined') {
-    // const bearer = bearerHeader.split(' ');
+    const bearer = bearerHeader.split(' ');
 
-    // const bearerToken = bearer[1];
+    const bearerToken = bearer[1];
 
-    // verify the token
-    console.log(bearerHeader)
-    jwt.verify(bearerHeader, secret.ACCESS_TOKEN_SECRET, (err, decoded) => {
-      console.log(decoded)
+    jwt.verify(bearerToken, secret.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      console.log(decoded);
       if (err) {
         res.sendStatus(403);
       }
 
       if (decoded) {
-        req.cookies.token ;
+        req.cookies.token;
         next();
       }
     });
@@ -91,26 +100,24 @@ const isAuthenticated = (req, res, next) => {
   }
 };
 
-
-
 router.post('/login', LoginController);
 
 router.post('/register', SignUpController);
 
-router.get('/verify/:id/user', Email_verifyController);
+router.get('/verify/:id/user', EmailVerifyController);
 
-router.post('/password/update', PasswordUpdateController);
+router.post('/password/update', isAuthenticated, PasswordUpdateController);
 
-router.post('/password/reset', PasswordResetController.PasswordGenLink); 
+router.post('/password/reset', PasswordResetController.PasswordGenLink);
 
-router.get('/password/reset/:userId/user', PasswordResetController.PasswordResetController); 
+router.get('/password/reset/:userId/user', PasswordResetController.PasswordResetController);
 
-/* router.get('/profile', isAuthenticated,ProfileController);
+router.get('/profile/:id', isAuthenticated, ProfilePerUser);
 
-// router.post("/profile/upload",isAuthenticated,ProfileUploadController)
+router.get('/profile', isAuthenticated, AllUserProfileController);
 
-// router.get('/contacts', isAuthenticated,ProfileController);
+router.post('/fileupload', isAuthenticated, uploadFile.single('profilePic'), uploadFileController);
 
-  router.post('/contacts/upload',uploadFile.single("contactDoc"), isAuthenticated,uploadController);
-*/ 
+router.post('/profile', isAuthenticated, ProfileUploadController);
+
 module.exports = router;

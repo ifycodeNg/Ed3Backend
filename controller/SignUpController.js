@@ -1,36 +1,30 @@
-let UserService = require("../Utility/SignupService")
-let config = require("../config/secret")
-let EmailService = require("../Utility/EmailService")
+const UserService = require('../Utility/SignupService');
+const config = require('../config/secret');
+const EmailService = require('../Utility/EmailService');
 
-let SignUp = async (req, res) => {
-  let UserFound = await UserService.checkUser(req.body.email)
+const SignUp = async (req, res) => {
+  const UserFound = await UserService.checkUser(req.body.email);
 
   if (UserFound[0] == undefined) {
-
-    let createUser = UserService.CreateUser(req)
-    let email = req.body.email
-    let token = await createUser
+    const createUser = UserService.CreateUser(req);
+    const { email } = req.body;
+    const token = await createUser;
 
     const message = `<a 
-    href="${config.baseUrl}/api/verify/${token.id}/user?token=${token.token}">
+    href="http://${config.baseUrl}/api/verify/${token.id}/user?token=${token.token}">
     Click Here Verify your Email Address
     </a>`;
 
-    await EmailService.SendMail(email, "Verification Of Email", message);
-    res.json({
-      msg: "User Was Created Successfully Please Check Email For Verification"
-    }
-    )
-
+    await EmailService.SendMail(email, 'Verification Of Email', message);
+    res.status(201).json({
+      msg: 'User Was Created Successfully Please Check Email For Verification',
+    });
+  } else if (UserFound[0].email) {
+    return res.status(200).json({
+      errors: {
+        msg: 'This Email already exist',
+      },
+    });
   }
-  else if (UserFound[0].email) {
-    return res.status(400).json({
-      "errors": {
-        "msg": "This Email already exist"
-      }
-    })
-  }
-
-
-}
-module.exports = SignUp
+};
+module.exports = SignUp;

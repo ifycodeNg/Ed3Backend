@@ -6,6 +6,7 @@ const usermetaModel = require('./models/user_meta');
 const ElectionModel = require('./models/Election');
 const DirectoryModel = require('./models/directory');
 const TokenModel = require('./models/Token');
+const FileModel = require('./models/File');
 
 const config = require('../config/secret');
 
@@ -36,10 +37,12 @@ const Usermeta = usermetaModel(sequelize, Sequelize);
 const Directory = DirectoryModel(sequelize, Sequelize);
 const Election = ElectionModel(sequelize, Sequelize);
 const Token= TokenModel(sequelize, Sequelize)
+const File= FileModel(sequelize,Sequelize)
 
 module.exports = {
   User,
   sequelize,
+  File,
   Usermeta,
   Directory,
   Token,
