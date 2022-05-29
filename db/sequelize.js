@@ -3,12 +3,17 @@ const Sequelize = require('sequelize');
 
 const userModel = require('./models/users');
 const usermetaModel = require('./models/user_meta');
+const ElectionModel = require('./models/Election');
+const DirectoryModel = require('./models/directory');
+const TokenModel = require('./models/Token');
+const FileModel = require('./models/File');
 
 const config = require('../config/secret');
 
-const sequelize = new Sequelize('ed3db', config.dbUser, config.dbPassword, {
+const sequelize = new Sequelize('ed3db', config.dbUser,
+ config.dbPassword, {
   host: 'localhost',
-  dialect: 'mariadb',
+  dialect: 'mysql',
 
   pool: {
     max: 5,
@@ -29,14 +34,21 @@ sequelize
 
 const User = userModel(sequelize, Sequelize);
 const Usermeta = usermetaModel(sequelize, Sequelize);
-
-sequelize.sync({ force: false }).then(() => {
-  // console.clear();
-  console.log('Database & tables created Successfully!');
-});
+const Directory = DirectoryModel(sequelize, Sequelize);
+const Election = ElectionModel(sequelize, Sequelize);
+const Token= TokenModel(sequelize, Sequelize)
+const File= FileModel(sequelize,Sequelize)
 
 module.exports = {
   User,
+  sequelize,
+  File,
   Usermeta,
+<<<<<<< HEAD
 
+=======
+  Directory,
+  Token,
+  Election
+>>>>>>> d268c8f03010431241cd4e8dc431e8da146056e1
 };

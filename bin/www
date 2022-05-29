@@ -6,6 +6,7 @@
 const http = require('http');
 const debug = require('debug')('notifia-backend:server');
 const app = require('../app');
+const { nodePort } = require('../config/secret');
 const config = require('../config/secret');
 
 /**
@@ -77,6 +78,7 @@ function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
   debug(`Listening on ${bind}`);
+  console.log(`Server Running on ${addr.address} ${nodePort}`)
 }
 
 /**

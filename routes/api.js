@@ -1,10 +1,12 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const secret = require('../config/secret');
+
+const router = express.Router();
 const path = require('path');
 const multer = require('multer');
 
-const router = express.Router();
-
+<<<<<<< HEAD
 const authRoute = require('./authRoute');
 
 const config = require('../config/secret');
@@ -35,12 +37,28 @@ const isAuthenticated = (req, res, next) => {
     res.sendStatus(403);
   }
 };
+=======
+const SignUpController = require('../controller/SignUpController');
+const LoginController = require('../controller/LoginController');
+const EmailVerifyController = require('../controller/EmailVerifyController');
+const PasswordResetController = require('../controller/PasswordResetController');
+const ProfilePerUser = require('../controller/ProfilePerUser');
+const ProfileUploadController = require('../controller/ProfileCreateController');
+const PasswordUpdateController = require('../controller/PasswordUpdateController');
+const AllUserProfileController = require('../controller/UsersProfileController');
+const uploadFileController = require('../controller/FileUploadController');
+const CreateUserController=require('../controller/CreateUserController')
+
+>>>>>>> d268c8f03010431241cd4e8dc431e8da146056e1
 
 const checkFileName = (name) => {
-  if (name === 'profileImage') {
-    const cs = path.join(__dirname, '../public/uploads/images');
-
-    // return 'public/uploads/images';
+  if (name === 'contactDoc') {
+    const cs = path.join(__dirname, '../uploads/');
+    return cs;
+  }
+  if (name === 'profilePic') {
+    console.log('Single file');
+    const cs = path.join(__dirname, '../uploads/');
     return cs;
   }
   if (name === 'contactFile') {
@@ -69,17 +87,29 @@ const storage = multer.diskStorage({
 });
 
 const singleFileFilter = async (req, file, cb) => {
-  if (file.fieldname === 'profileImage') {
+  console.log('Single file');
+  if (file.fieldname === 'contactDoc') {
     if (
-      file.mimetype === 'image/jpg'
-      || file.mimetype === 'image/jpeg'
-      || file.mimetype === 'image/png'
+      file.mimetype === 'text/csv'
+
     ) {
       cb(null, true);
     } else {
       req.fileValidationError = 'Forbidden Extension';
       return cb(null, false, req.fileValidationError);
     }
+<<<<<<< HEAD
+=======
+  } else if (file.fieldname === 'profilePic') {
+    console.log('Single file');
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      console.log('Single file');
+      cb(null, true);
+    }
+  } else {
+    req.fileValidationError = 'Forbidden Extension';
+    return cb(null, false, req.fileValidationError);
+>>>>>>> d268c8f03010431241cd4e8dc431e8da146056e1
   }
 
   if (file.fieldname === 'contactFile') {
@@ -100,8 +130,56 @@ const uploadFile = multer({
   fileFilter: singleFileFilter,
 });
 
+<<<<<<< HEAD
 router.post('/login', authRoute.loginPOST);
+=======
+const isAuthenticated = (req, res, next) => {
+  const bearerHeader = req.headers.authorization;
 
-// router.post('/register', authRoute.registerPOST);
+  if (typeof bearerHeader !== 'undefined') {
+    const bearer = bearerHeader.split(' ');
+
+    const bearerToken = bearer[1];
+
+    jwt.verify(bearerToken, secret.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      console.log(decoded);
+      if (err) {
+        res.sendStatus(403);
+      }
+
+      if (decoded) {
+        req.cookies.token;
+        next();
+      }
+    });
+  } else {
+    // forbidden
+    // console.log('there was a problem with the req');
+    res.sendStatus(403);
+  }
+};
+
+router.post('/login', LoginController);
+
+router.post('/register', SignUpController);
+
+router.get('/verify/:id/user', EmailVerifyController);
+
+router.post('/password/update', isAuthenticated, PasswordUpdateController);
+
+router.post('/password/reset', PasswordResetController.PasswordGenLink);
+
+router.get('/password/reset/:userId/user', PasswordResetController.PasswordResetController);
+
+router.get('/profile/:id', isAuthenticated, ProfilePerUser);
+
+router.get('/profile', isAuthenticated, AllUserProfileController);
+
+router.post('/fileupload', isAuthenticated, uploadFile.single('profilePic'), uploadFileController);
+
+router.post('/profile', isAuthenticated, ProfileUploadController);
+>>>>>>> d268c8f03010431241cd4e8dc431e8da146056e1
+
+router.post('/create/user', isAuthenticated, CreateUserController);
 
 module.exports = router;
