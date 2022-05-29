@@ -1,9 +1,9 @@
 const crypto = require('crypto');
-const Changepassword = require('../Utility/PasswordService');
-const UserService = require('../Utility/UserService');
+const Changepassword = require('../services/PasswordService');
+const UserService = require('../services/UserService');
 const config = require('../config/secret');
-const EmailService = require('../Utility/EmailService');
-const TokenService = require('../Utility/TokenService');
+const EmailService = require('../services/EmailService');
+const TokenService = require('../services/TokenService');
 
 let token;
 
