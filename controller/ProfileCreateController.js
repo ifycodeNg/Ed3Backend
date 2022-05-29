@@ -1,27 +1,31 @@
-const jwt = require('jsonwebtoken');
-const ProfileCreation = require('../Utility/ProfileService');
-const UserAccount = require('../Utility/UserService');
-const secret = require('../config/secret');
+const UserMetaService = require('../services/UserMetaService');
 
-const ProfileUploadController = async (req, res) => {
-  if (!req.file) {
-    const { authorization } = req.headers;
-    if (!authorization) throw new Error('You need to login.');
+const ProfileCreateController = async (req, res) => {
+  const profileObj = req.body;
 
-    const token = authorization.split(' ')[1];
+  const { uid } = profileObj;
 
-    const { userId } = jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
-    const UserLookUp = await UserAccount.checkUserById(userId);
-    if (UserLookUp == false) {
-      res.status(200).json({ message: 'User Not Found' });
-    } else if (UserLookUp[0].isConfirmed === 0) {
-      res.status(200).json({ message: 'Email Not Verified' });
-    } else {
-      const CreateProfile = await ProfileCreation.ProfileCreate(req, UserLookUp[0].id);
-      const ProfileDetail = await ProfileCreation.ProfileLookup(UserLookUp[0].id);
-      const UpdateProfile = await ProfileCreation.UpdateProfile(ProfileDetail[0].id);
-      res.status(201).json({ message: 'Profile Created Successfully' });
+  const reqEntries = Object.entries(profileObj);
+
+  for (const [key, value] of reqEntries) {
+    if (key !== 'uid' && key !== 'profilePic') {
+      if (key === 'isProfileComplete') {
+        const upd = await UserMetaService.updateMeta(uid, key, value);
+        if (upd === false) {
+          res.json('error');
+          break;
+        }
+      } else if (value !== '') {
+        const upd = await UserMetaService.createMeta(uid, key, value);
+        if (upd === false) {
+          res.json('error');
+          break;
+        }
+      }
     }
   }
+
+  res.type('application/json');
+  return res.status(201).json({ message: 'Profile Created Successfully' });
 };
-module.exports = ProfileUploadController;
+module.exports = ProfileCreateController;

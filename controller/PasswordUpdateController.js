@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-const Changepassword = require('../Utility/PasswordService');
+const Changepassword = require('../services/PasswordService');
+const config = require('../config/secret');
 
 const PasswordResetController = async (req, res) => {
   const { authorization } = req.headers;
@@ -7,7 +8,7 @@ const PasswordResetController = async (req, res) => {
 
   const token = authorization.split(' ')[1];
 
-  const { UserId } = jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
+  const { UserId } = jwt.verify(token, config.ACCESS_TOKEN_SECRET);
   const { password } = req.body;
   const passwordChange = await Changepassword(UserId, password);
 
