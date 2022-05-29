@@ -1,20 +1,25 @@
-let Changepassword=require("../Utility/PasswordService")
+const jwt = require('jsonwebtoken');
+const Changepassword = require('../Utility/PasswordService');
 
-let PasswordResetController=async (req,res)=>{
-    let passwordChange=await Changepassword(req)
+const PasswordResetController = async (req, res) => {
+  const { authorization } = req.headers;
+  if (!authorization) throw new Error('You need to login.');
 
-    if(passwordChange == undefined){
-        res.json({msg:"Password Updated Successfully ",
-             }
-               )
-    }
-    else{
-        res.status(400).json({msg:"Error Occured Please Try Again ",
-    }
-      )
-    }
-   
-}
+  const token = authorization.split(' ')[1];
 
-module.exports=
-    PasswordResetController
+  const { UserId } = jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
+  const { password } = req.body;
+  const passwordChange = await Changepassword(UserId, password);
+
+  if (passwordChange == undefined) {
+    res.json({
+      msg: 'Password Updated Successfully ',
+    });
+  } else {
+    res.status(400).json({
+      msg: 'Error Occured Please Try Again ',
+    });
+  }
+};
+
+module.exports = PasswordResetController;
