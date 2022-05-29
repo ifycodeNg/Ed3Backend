@@ -38,4 +38,5 @@ sequelize.sync({ force: false }).then(() => {
 module.exports = {
   User,
   Usermeta,
+
 };

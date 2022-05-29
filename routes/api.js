@@ -5,7 +5,7 @@ const multer = require('multer');
 
 const router = express.Router();
 
-// const authRoute = require('./authRoute');
+const authRoute = require('./authRoute');
 
 const config = require('../config/secret');
 
@@ -36,11 +36,15 @@ const isAuthenticated = (req, res, next) => {
   }
 };
 
-
-
 const checkFileName = (name) => {
   if (name === 'profileImage') {
     const cs = path.join(__dirname, '../public/uploads/images');
+
+    // return 'public/uploads/images';
+    return cs;
+  }
+  if (name === 'contactFile') {
+    const cs = path.join(__dirname, '../public/uploads/contacts');
 
     // return 'public/uploads/images';
     return cs;
@@ -76,10 +80,19 @@ const singleFileFilter = async (req, file, cb) => {
       req.fileValidationError = 'Forbidden Extension';
       return cb(null, false, req.fileValidationError);
     }
-  } else {
-    req.fileValidationError = 'Forbidden Extension';
-    return cb(null, false, req.fileValidationError);
   }
+
+  if (file.fieldname === 'contactFile') {
+    if (file.mimetype === 'text/csv' || file.mimetype === 'text/xls') {
+      cb(null, true);
+    } else {
+      req.fileValidationError = 'Forbidden Extension';
+      return cb(null, false, req.fileValidationError);
+    }
+  }
+
+  req.fileValidationError = 'Forbidden Extension';
+  return cb(null, false, req.fileValidationError);
 };
 
 const uploadFile = multer({
@@ -87,7 +100,7 @@ const uploadFile = multer({
   fileFilter: singleFileFilter,
 });
 
-// router.post('/login', authRoute.loginPOST);
+router.post('/login', authRoute.loginPOST);
 
 // router.post('/register', authRoute.registerPOST);
 
