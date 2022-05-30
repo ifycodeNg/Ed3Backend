@@ -5,21 +5,18 @@ module.exports = (sequelize, type) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    userID: {
+    stateID: {
       type: type.INTEGER,
       notEmpty: true,
-      unique: false,
     },
-    key: {
+    constituencyCode: {
       type: type.STRING,
       notEmpty: true,
-      unique: false,
     },
-    token: {
+    constituencyName: {
       type: type.STRING,
       notEmpty: true,
-      unique: false,
     },
   };
-  return sequelize.define('Token', fields);
+  return sequelize.define('sconstituencies', fields, { timestamps: false });
 };

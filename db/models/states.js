@@ -5,35 +5,46 @@ module.exports = (sequelize, type) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    email: {
-      type: type.STRING,
-      isEmail: true,
-      notEmpty: true,
-      unique: true,
-    },
-    password: {
-      type: type.STRING,
-      notEmpty: true,
-    },
-    confirmationToken: {
-      type: type.STRING,
-      notEmpty: true,
-    },
-    role: {
-      type: type.STRING,
-      notEmpty: true,
-    },
-    isConfirmed: {
-      type: type.INTEGER,
-      defaultValue: 0,
-      notEmpty: true,
-    },
-    isBlocked: {
+    country_id: {
       type: type.INTEGER,
       notEmpty: true,
-      defaultValue: 0,
-
+    },
+    name: {
+      type: type.STRING,
+      notEmpty: true,
+    },
+    abbreviation: {
+      type: type.STRING,
+      notEmpty: true,
+    },
+    code: {
+      type: type.STRING,
+      notEmpty: true,
+    },
+    lat: {
+      type: type.STRING,
+      notEmpty: true,
+    },
+    lng: {
+      type: type.STRING,
+      notEmpty: true,
+    },
+    mapcode: {
+      type: type.STRING,
+      notEmpty: true,
+    },
+    registered_voters: {
+      type: type.INTEGER,
+      notEmpty: true,
+    },
+    polling_units: {
+      type: type.INTEGER,
+      notEmpty: true,
+    },
+    geo_political_zone_id: {
+      type: type.INTEGER,
+      notEmpty: true,
     },
   };
-  return sequelize.define('users', fields);
+  return sequelize.define('states', fields, { timestamps: false });
 };

@@ -1,62 +1,83 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const UserService = require('../Utility/UserService');
+const sequelize = require('../db/sequelize');
+const UserMetaService = require('../services/UserMetaService');
 const secret = require('../config/secret');
-const ProfileService = require('../Utility/ProfileService');
 
 const Login = async (req, res) => {
-  const { email } = req.body;
-  const { password } = req.body;
+  const { email, password } = req.body;
 
-  const UserFound = await UserService.checkUser(email);
+  const isValidPassword = (userpass, mpassword) => bcrypt.compareSync(mpassword, userpass);
 
-  if (UserFound[0] == undefined) {
-    return res.status(200).json({
-      errors: {
-        msg: 'Invalid Credential',
-      },
-    });
+  const loginUser = await sequelize.User.findOne({
+    where: {
+      email,
+    },
+  })
+    .then((user) => {
+      if (!user) {
+        return false;
+      }
+
+      if (!isValidPassword(user.password, password)) {
+        return false;
+      }
+
+      if (isValidPassword(user.password, password)) {
+        const userinfo = user.get();
+
+        return userinfo;
+      }
+    })
+    .catch((err) => false);
+
+  const waitOutput = loginUser;
+
+  if (!waitOutput) {
+    res.type('application/json');
+    return res.status(200).json({ msg: 'Password Mismatch' });
   }
 
-  const isMatch = await bcrypt.compare(password, UserFound[0].password);
-  if (!isMatch) {
-    return res.status(200).json({
-      errors: {
-        msg: 'Invalid Credential',
-      },
+  if (waitOutput) {
+    const uid = waitOutput.id;
+
+    const metaKey = 'isProfileComplete';
+
+    const metaOutput = await UserMetaService.getMeta(uid, metaKey);
+
+    const isProfileComplete = Number(metaOutput);
+
+    const firstName = await UserMetaService.getMeta(uid, 'firstName');
+    const lastName = await UserMetaService.getMeta(uid, 'lastName');
+    const profilePic = await UserMetaService.getMeta(uid, 'profilePic');
+
+    const awaitingOutObj = {
+      userID: uid,
+      role: waitOutput.role,
+      isProfileComplete: metaOutput,
+    };
+
+    const token = jwt.sign(awaitingOutObj, secret.ACCESS_TOKEN_SECRET, {
+      expiresIn: '7d',
     });
+
+    const toReturn = {
+
+      id: waitOutput.id,
+      email: waitOutput.email,
+      role: waitOutput.role,
+      isConfirmed: waitOutput.isConfirmed,
+      isBlocked: waitOutput.isBlocked,
+      firstName,
+      lastName,
+      profilePic,
+      isProfileComplete,
+      jwtoken: token,
+    };
+
+    res.type('application/json');
+    return res.status(201).json(toReturn);
   }
-
-  const UserInfo = UserFound[0];
-  const Uid = UserFound[0].id;
-
-  const UserObj = {};
-
-  UserObj.isProfileComplete = parseInt(await ProfileService.getInfo(Uid, 'isProfileComplete'));
-  UserObj.firstname = await ProfileService.getInfo(Uid, 'firstName');
-  UserObj.lastName = await ProfileService.getInfo(Uid, 'lastName');
-  UserObj.role = await ProfileService.getInfo(Uid, 'role');
-  UserObj.gender = await ProfileService.getInfo(Uid, 'gender');
-  UserObj.userId = UserInfo.id;
-  UserObj.isConfirmed = UserInfo.isConfirmed;
-  UserObj.telephone = parseInt(await ProfileService.getInfo(Uid, 'telephone'));
-  UserObj.isBlocked = UserInfo.isBlocked;
-  UserObj.email = UserInfo.email;
- 
-
-  UserObj.ProfilePics = await ProfileService.getInfo(Uid, 'profilePic');
-
-  
-
-  const token = jwt.sign({ UserId: UserObj.userId, role: UserObj.role, isProfileComplete: UserObj.isProfileComplete }, secret.ACCESS_TOKEN_SECRET, {
-    expiresIn: '7d',
-  });
-  UserObj.jwtoken = token;
-
-  res.status(201).json(
-    UserObj,
-
-  );
 };
 
 module.exports = Login;

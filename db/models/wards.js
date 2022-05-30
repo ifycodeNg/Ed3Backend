@@ -5,35 +5,26 @@ module.exports = (sequelize, type) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    email: {
-      type: type.STRING,
-      isEmail: true,
-      notEmpty: true,
-      unique: true,
-    },
-    password: {
+    name: {
       type: type.STRING,
       notEmpty: true,
     },
-    confirmationToken: {
+    abbreviation: {
       type: type.STRING,
       notEmpty: true,
     },
-    role: {
-      type: type.STRING,
-      notEmpty: true,
-    },
-    isConfirmed: {
-      type: type.INTEGER,
-      defaultValue: 0,
-      notEmpty: true,
-    },
-    isBlocked: {
+    local_government_id: {
       type: type.INTEGER,
       notEmpty: true,
-      defaultValue: 0,
-
+    },
+    registered_voters: {
+      type: type.INTEGER,
+      notEmpty: true,
+    },
+    polling_units: {
+      type: type.INTEGER,
+      notEmpty: true,
     },
   };
-  return sequelize.define('users', fields);
+  return sequelize.define('registration_areas', fields, { timestamps: false });
 };

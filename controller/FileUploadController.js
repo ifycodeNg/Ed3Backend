@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const secret = require('../config/secret');
-const UploadFile = require('../Utility/UploadService');
+const UploadFile = require('../services/UploadService');
 
 const FileUpload = async (req, res) => {
   const { authorization } = req.headers;

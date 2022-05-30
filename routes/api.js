@@ -1,22 +1,21 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const secret = require('../config/secret');
 
 const router = express.Router();
 const path = require('path');
 const multer = require('multer');
+const secret = require('../config/secret');
 
 const SignUpController = require('../controller/SignUpController');
 const LoginController = require('../controller/LoginController');
 const EmailVerifyController = require('../controller/EmailVerifyController');
 const PasswordResetController = require('../controller/PasswordResetController');
 const ProfilePerUser = require('../controller/ProfilePerUser');
-const ProfileUploadController = require('../controller/ProfileCreateController');
+const ProfileCreateController = require('../controller/ProfileCreateController');
 const PasswordUpdateController = require('../controller/PasswordUpdateController');
 const AllUserProfileController = require('../controller/UsersProfileController');
 const uploadFileController = require('../controller/FileUploadController');
-const CreateUserController=require('../controller/CreateUserController')
-
+const CreateUserController = require('../controller/CreateUserController');
 
 const checkFileName = (name) => {
   if (name === 'contactDoc') {
@@ -109,7 +108,8 @@ const isAuthenticated = (req, res, next) => {
       }
 
       if (decoded) {
-        req.cookies.token;
+        req.token = bearerToken;
+        // req.cookies.token;
         next();
       }
     });
@@ -120,15 +120,9 @@ const isAuthenticated = (req, res, next) => {
   }
 };
 
-router.post('/login', LoginController);
+// router.get('/verify/:id/user', EmailVerifyController);
 
-router.post('/register', SignUpController);
-
-router.get('/verify/:id/user', EmailVerifyController);
-
-router.post('/password/update', isAuthenticated, PasswordUpdateController);
-
-router.post('/password/reset', PasswordResetController.PasswordGenLink);
+router.get('/verify_email', EmailVerifyController);
 
 router.get('/password/reset/:userId/user', PasswordResetController.PasswordResetController);
 
@@ -136,9 +130,28 @@ router.get('/profile/:id', isAuthenticated, ProfilePerUser);
 
 router.get('/profile', isAuthenticated, AllUserProfileController);
 
-router.post('/fileupload', isAuthenticated, uploadFile.single('profilePic'), uploadFileController);
+// POST REQUESTS
 
-router.post('/profile', isAuthenticated, ProfileUploadController);
+router.post('/login', LoginController);
+
+router.post('/register', SignUpController);
+
+router.post('/password/update', isAuthenticated, PasswordUpdateController);
+
+router.post('/password/reset', PasswordResetController.PasswordGenLink);
+
+// uploadFile a file
+const fileUpload = uploadFile.fields([
+  { name: 'profilePic' },
+  { name: 'contactList' },
+]);
+router.post(
+  '/fileupload',
+  [isAuthenticated, fileUpload],
+  uploadFileController,
+);
+
+router.post('/profile', isAuthenticated, ProfileCreateController);
 
 router.post('/create/user', isAuthenticated, CreateUserController);
 
