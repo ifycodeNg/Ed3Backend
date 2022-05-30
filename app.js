@@ -7,7 +7,7 @@ const logger = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 
-const sequelize=require('./db/sequelize');
+const sequelize = require('./db/sequelize');
 
 const routes = require('./routes/api');
 

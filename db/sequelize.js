@@ -44,11 +44,7 @@ module.exports = {
   sequelize,
   File,
   Usermeta,
-<<<<<<< HEAD
-
-=======
   Directory,
   Token,
   Election
->>>>>>> d268c8f03010431241cd4e8dc431e8da146056e1
 };

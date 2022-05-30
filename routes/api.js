@@ -6,38 +6,6 @@ const router = express.Router();
 const path = require('path');
 const multer = require('multer');
 
-<<<<<<< HEAD
-const authRoute = require('./authRoute');
-
-const config = require('../config/secret');
-
-const isAuthenticated = (req, res, next) => {
-  const bearerHeader = req.headers.authorization;
-
-  if (typeof bearerHeader !== 'undefined') {
-    const bearer = bearerHeader.split(' ');
-
-    const bearerToken = bearer[1];
-
-    // verify the token
-
-    jwt.verify(bearerToken, config.jwtKey, (err, decoded) => {
-      if (err) {
-        res.sendStatus(403);
-      }
-
-      if (decoded) {
-        req.token = bearerToken;
-        next();
-      }
-    });
-  } else {
-    // forbidden
-    // console.log('there was a problem with the req');
-    res.sendStatus(403);
-  }
-};
-=======
 const SignUpController = require('../controller/SignUpController');
 const LoginController = require('../controller/LoginController');
 const EmailVerifyController = require('../controller/EmailVerifyController');
@@ -49,7 +17,6 @@ const AllUserProfileController = require('../controller/UsersProfileController')
 const uploadFileController = require('../controller/FileUploadController');
 const CreateUserController=require('../controller/CreateUserController')
 
->>>>>>> d268c8f03010431241cd4e8dc431e8da146056e1
 
 const checkFileName = (name) => {
   if (name === 'contactDoc') {
@@ -98,8 +65,6 @@ const singleFileFilter = async (req, file, cb) => {
       req.fileValidationError = 'Forbidden Extension';
       return cb(null, false, req.fileValidationError);
     }
-<<<<<<< HEAD
-=======
   } else if (file.fieldname === 'profilePic') {
     console.log('Single file');
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -109,7 +74,6 @@ const singleFileFilter = async (req, file, cb) => {
   } else {
     req.fileValidationError = 'Forbidden Extension';
     return cb(null, false, req.fileValidationError);
->>>>>>> d268c8f03010431241cd4e8dc431e8da146056e1
   }
 
   if (file.fieldname === 'contactFile') {
@@ -130,9 +94,6 @@ const uploadFile = multer({
   fileFilter: singleFileFilter,
 });
 
-<<<<<<< HEAD
-router.post('/login', authRoute.loginPOST);
-=======
 const isAuthenticated = (req, res, next) => {
   const bearerHeader = req.headers.authorization;
 
@@ -178,7 +139,6 @@ router.get('/profile', isAuthenticated, AllUserProfileController);
 router.post('/fileupload', isAuthenticated, uploadFile.single('profilePic'), uploadFileController);
 
 router.post('/profile', isAuthenticated, ProfileUploadController);
->>>>>>> d268c8f03010431241cd4e8dc431e8da146056e1
 
 router.post('/create/user', isAuthenticated, CreateUserController);
 
