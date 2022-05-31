@@ -16,6 +16,8 @@ const PasswordUpdateController = require('../controller/PasswordUpdateController
 const AllUserProfileController = require('../controller/UsersProfileController');
 const uploadFileController = require('../controller/FileUploadController');
 const CreateUserController = require('../controller/CreateUserController');
+const UpdateUserController = require('../controller/UpdateUserController');
+
 
 const checkFileName = (name) => {
   if (name === 'contactDoc') {
@@ -154,5 +156,12 @@ router.post(
 router.post('/profile', isAuthenticated, ProfileCreateController);
 
 router.post('/create/user', isAuthenticated, CreateUserController);
+
+
+// PUT REQUESTS
+// update user
+
+router.put('/user/:id', isAuthenticated, UpdateUserController);
+
 
 module.exports = router;

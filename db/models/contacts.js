@@ -5,21 +5,16 @@ module.exports = (sequelize, type) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    userID: {
+    directory_id: {
       type: type.INTEGER,
       notEmpty: true,
       unique: false,
     },
-    key: {
-      type: type.STRING,
-      notEmpty: true,
-      unique: false,
-    },
-    token: {
-      type: type.STRING,
+    mobileNumber: {
+      type: type.INTEGER,
       notEmpty: true,
       unique: false,
     },
   };
-  return sequelize.define('Token', fields);
+  return sequelize.define('contacts', fields);
 };

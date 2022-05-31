@@ -2,8 +2,6 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const sequelize = require('../db/sequelize');
 
-let token;
-
 const checkUser = async (email) => {
   const userFound = sequelize.User.findOne({
     where: {
@@ -55,13 +53,13 @@ const checkUserById = async (id) => {
 };
 
 const getAllUsers = async () => {
-  const userFound = sequelize.User.findAll().then((findCans) => {
-    if (!findCans) {
+  const userFound = sequelize.User.findAll().then((users) => {
+    if (!users) {
       return false;
     }
 
-    if (findCans) {
-      return findCans;
+    if (users) {
+      return users;
     }
   })
     .catch((err) => {
@@ -77,6 +75,7 @@ const getAllUsers = async () => {
 
 const CreateUser = async (req) => {
 
+  
 
 
 

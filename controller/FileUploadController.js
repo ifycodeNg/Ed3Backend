@@ -1,21 +1,45 @@
-const jwt = require('jsonwebtoken');
-const secret = require('../config/secret');
-const UploadFile = require('../services/UploadService');
+const UserMetaService = require('../services/UserMetaService');
 
 const FileUpload = async (req, res) => {
-  const { authorization } = req.headers;
-  if (!authorization) throw new Error('You need to login.');
+  const { uid, key, uploadedBy } = req.body;
 
-  const token = authorization.split(' ')[1];
-  console.log(req.file);
-  const filePath = req.file.path;
+  const postedFile = req.files[key][0];
 
-  const { UserId } = jwt.verify(token, secret.ACCESS_TOKEN_SECRET);
-  const uploadFile = UploadFile(UserId, filePath);
+  if (req.fileValidationError) {
+    res.type('application/json');
+    return res
+      .status(200)
+      .json(`Invalid Image Format, Please Upload ${key === 'profilePic' ? 'JPG or JPEG' : 'CSV'} File(s) Only`);
+  }
 
-  return res.status(201).json({
-    success: true,
-  });
+  const checkMediaPath = async (path) => {
+    if (path !== undefined) {
+      const pathToSlice = path.path;
+
+      const fileUrl = pathToSlice.slice(6);
+
+      return fileUrl;
+    }
+    return null;
+  };
+
+  const uploadedFilePath = await checkMediaPath(postedFile);
+
+  if (key === 'profilePic') {
+    const updateUsermeta = await UserMetaService.createMeta(uid, key, uploadedFilePath);
+    if (updateUsermeta) {
+      res.type('application/json');
+      return res.status(201).json(updateUsermeta);
+    }
+  }
+
+  if (key === 'contactList') {
+
+    // create an entry into the documents table
+
+  }
+
+  return true;
 };
 
 module.exports = FileUpload;
