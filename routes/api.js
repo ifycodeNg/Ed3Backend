@@ -17,6 +17,11 @@ const AllUserProfileController = require('../controller/UsersProfileController')
 const FileUploadController = require('../controller/FileUploadController');
 const CreateUserController = require('../controller/CreateUserController');
 const UpdateUserController = require('../controller/UpdateUserController');
+const AddElectionController = require('../controller/ElectionAddController');
+const AllElections = require('../controller/ListAllElectionController');
+const EditElection = require('../controller/EditElectionController');
+const ViewElection = require('../controller/ViewElectionController');
+
 
 const checkFileName = (name) => {
   // if (name === 'contactDoc') {
@@ -120,6 +125,10 @@ router.get('/profile/:id', isAuthenticated, ProfilePerUser);
 
 router.get('/profile', isAuthenticated, AllUserProfileController);
 
+router.get('/election', isAuthenticated, AllElections);
+
+router.get('/election/:ElectionId', isAuthenticated, ViewElection);
+
 // POST REQUESTS
 
 router.post('/login', LoginController);
@@ -129,6 +138,8 @@ router.post('/register', SignUpController);
 router.post('/password/update', isAuthenticated, PasswordUpdateController);
 
 router.post('/password/reset', PasswordResetController.PasswordGenLink);
+
+router.post('/election', isAuthenticated, AddElectionController);
 
 // uploadFile a file
 // const fileUpload = uploadFile.fields([
@@ -156,8 +167,10 @@ router.post('/profile', isAuthenticated, ProfileCreateController);
 
 router.post('/create/user', isAuthenticated, CreateUserController);
 
+
 // PUT REQUESTS
 // update user
+router.put('/election/:ElectionId', isAuthenticated, EditElection);
 
 router.put('/user/:id', isAuthenticated, UpdateUserController);
 
