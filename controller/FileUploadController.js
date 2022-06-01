@@ -1,14 +1,17 @@
 const UserMetaService = require('../services/UserMetaService');
 
-const FileUpload = async (req, res) => {
-  const { uid, key, uploadedBy } = req.body;
+const ProfileImageUpload = async (req, res) => {
+  const { uid, key } = req.body;
 
-  const postedFile = req.files[key][0];
+  const postedFile = req.file;
+
+  // console.log('posted File ==> ' + JSON.stringify(postedFile));
+
 
   if (req.fileValidationError) {
     res.type('application/json');
     return res
-      .status(200)
+      .status(500)
       .json(`Invalid Image Format, Please Upload ${key === 'profilePic' ? 'JPG or JPEG' : 'CSV'} File(s) Only`);
   }
 
@@ -16,7 +19,7 @@ const FileUpload = async (req, res) => {
     if (path !== undefined) {
       const pathToSlice = path.path;
 
-      const fileUrl = pathToSlice.slice(6);
+      const fileUrl = pathToSlice.slice(37);
 
       return fileUrl;
     }
@@ -25,7 +28,8 @@ const FileUpload = async (req, res) => {
 
   const uploadedFilePath = await checkMediaPath(postedFile);
 
-  if (key === 'profilePic') {
+  // console.log('THE UPLOADED FILE PATH ===> ' + JSON.stringify(uploadedFilePath));
+  if (uploadedFilePath) {
     const updateUsermeta = await UserMetaService.createMeta(uid, key, uploadedFilePath);
     if (updateUsermeta) {
       res.type('application/json');
@@ -33,13 +37,14 @@ const FileUpload = async (req, res) => {
     }
   }
 
-  if (key === 'contactList') {
-
-    // create an entry into the documents table
-
-  }
-
   return true;
 };
 
-module.exports = FileUpload;
+const ContactsFileUpload = async (req, res) => {
+
+}
+
+module.exports = {
+  ProfileImageUpload,
+  ContactsFileUpload,
+};

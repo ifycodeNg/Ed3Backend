@@ -14,19 +14,18 @@ const ProfilePerUser = require('../controller/ProfilePerUser');
 const ProfileCreateController = require('../controller/ProfileCreateController');
 const PasswordUpdateController = require('../controller/PasswordUpdateController');
 const AllUserProfileController = require('../controller/UsersProfileController');
-const uploadFileController = require('../controller/FileUploadController');
+const FileUploadController = require('../controller/FileUploadController');
 const CreateUserController = require('../controller/CreateUserController');
 const UpdateUserController = require('../controller/UpdateUserController');
 
-
 const checkFileName = (name) => {
-  if (name === 'contactDoc') {
-    const cs = path.join(__dirname, '../uploads/');
-    return cs;
-  }
+  // if (name === 'contactDoc') {
+  //   const cs = path.join(__dirname, '../uploads/');
+  //   return cs;
+  // }
   if (name === 'profilePic') {
     console.log('Single file');
-    const cs = path.join(__dirname, '../uploads/');
+    const cs = path.join(__dirname, '../public/uploads/images');
     return cs;
   }
   if (name === 'contactFile') {
@@ -55,39 +54,28 @@ const storage = multer.diskStorage({
 });
 
 const singleFileFilter = async (req, file, cb) => {
-  console.log('Single file');
-  if (file.fieldname === 'contactDoc') {
+  if (file.fieldname === 'profilePic') {
     if (
-      file.mimetype === 'text/csv'
-
+      file.mimetype === 'image/jpg'
+      || file.mimetype === 'image/jpeg'
+      || file.mimetype === 'image/png'
     ) {
       cb(null, true);
     } else {
       req.fileValidationError = 'Forbidden Extension';
       return cb(null, false, req.fileValidationError);
     }
-  } else if (file.fieldname === 'profilePic') {
-    console.log('Single file');
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-      console.log('Single file');
-      cb(null, true);
-    }
-  } else {
-    req.fileValidationError = 'Forbidden Extension';
-    return cb(null, false, req.fileValidationError);
-  }
-
-  if (file.fieldname === 'contactFile') {
-    if (file.mimetype === 'text/csv' || file.mimetype === 'text/xls') {
+  } else if (file.fieldname === 'contactsFile') {
+    if (file.mimetype === 'text/csv') {
       cb(null, true);
     } else {
       req.fileValidationError = 'Forbidden Extension';
       return cb(null, false, req.fileValidationError);
     }
+  } else {
+    req.fileValidationError = 'Forbidden Extension';
+    return cb(null, false, req.fileValidationError);
   }
-
-  req.fileValidationError = 'Forbidden Extension';
-  return cb(null, false, req.fileValidationError);
 };
 
 const uploadFile = multer({
@@ -143,25 +131,34 @@ router.post('/password/update', isAuthenticated, PasswordUpdateController);
 router.post('/password/reset', PasswordResetController.PasswordGenLink);
 
 // uploadFile a file
-const fileUpload = uploadFile.fields([
-  { name: 'profilePic' },
-  { name: 'contactList' },
-]);
+// const fileUpload = uploadFile.fields([
+//   { name: 'profilePic', maxCount: 1 },
+//   { name: 'contactList', maxCount: 1 },
+// ]);
+// router.post(
+//   '/profileupload',
+//   [isAuthenticated, fileUpload],
+//   FileUploadController.ProfileImageUpload,
+// );
+
+// uploadFile a file
+const profilePicUpload = uploadFile.single('profilePic');
 router.post(
-  '/fileupload',
-  [isAuthenticated, fileUpload],
-  uploadFileController,
+  '/profile_picture_upload',
+  [isAuthenticated, profilePicUpload],
+  FileUploadController.ProfileImageUpload,
 );
+
+// const fileUpload = uploadFile.fields([{ name: 'profileImage' }]);
+// router.post('/fileupload/:name', profileImageUpload, fileRoute.filePOST);
 
 router.post('/profile', isAuthenticated, ProfileCreateController);
 
 router.post('/create/user', isAuthenticated, CreateUserController);
 
-
 // PUT REQUESTS
 // update user
 
 router.put('/user/:id', isAuthenticated, UpdateUserController);
-
 
 module.exports = router;

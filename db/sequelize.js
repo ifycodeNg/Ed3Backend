@@ -3,10 +3,10 @@ const Sequelize = require('sequelize');
 
 const userModel = require('./models/users');
 const usermetaModel = require('./models/user_meta');
-const ElectionModel = require('./models/Election');
+const ElectionModel = require('./models/elections');
 const DirectoryModel = require('./models/directory');
-const TokenModel = require('./models/Token');
-const FileModel = require('./models/File');
+const TokenModel = require('./models/token');
+const FileModel = require('./models/file');
 
 const config = require('../config/secret');
 
