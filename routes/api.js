@@ -131,23 +131,23 @@ router.post('/password/update', isAuthenticated, PasswordUpdateController);
 router.post('/password/reset', PasswordResetController.PasswordGenLink);
 
 // uploadFile a file
-// const fileUpload = uploadFile.fields([
-//   { name: 'profilePic', maxCount: 1 },
-//   { name: 'contactList', maxCount: 1 },
-// ]);
-// router.post(
-//   '/profileupload',
-//   [isAuthenticated, fileUpload],
-//   FileUploadController.ProfileImageUpload,
-// );
+const fileUpload = uploadFile.fields([
+  { name: 'profilePic' },
+  { name: 'contactList'},
+]);
+router.post(
+  '/fileupload',
+  [isAuthenticated, fileUpload],
+  FileUploadController,
+);
 
 // uploadFile a file
-const profilePicUpload = uploadFile.single('profilePic');
-router.post(
-  '/profile_picture_upload',
-  [isAuthenticated, profilePicUpload],
-  FileUploadController.ProfileImageUpload,
-);
+// const profilePicUpload = uploadFile.single('profilePic');
+// router.post(
+//   '/profile_picture_upload',
+//   [isAuthenticated, profilePicUpload],
+//   FileUploadController.ProfileImageUpload,
+// );
 
 // const fileUpload = uploadFile.fields([{ name: 'profileImage' }]);
 // router.post('/fileupload/:name', profileImageUpload, fileRoute.filePOST);

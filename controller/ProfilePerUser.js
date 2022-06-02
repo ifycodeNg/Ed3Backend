@@ -12,12 +12,12 @@ const ProfilePerUserController = async (req, res) => {
 
     const Uid = UserInfo.id;
 
-    UserObj.isProfileComplete = Number(UserMetaService.getMeta(Uid, 'isProfileComplete'));
+    UserObj.isProfileComplete = Number(await UserMetaService.getMeta(Uid, 'isProfileComplete'));
     UserObj.firstname = await UserMetaService.getMeta(Uid, 'firstName');
     UserObj.lastName = await UserMetaService.getMeta(Uid, 'lastName');
     UserObj.gender = await UserMetaService.getMeta(Uid, 'gender');
     UserObj.ProfilePics = await UserMetaService.getMeta(Uid, 'profilePic');
-    UserObj.telephone = Number(await UserMetaService.getMeta(Uid, 'telephone'));
+    UserObj.telephone = Number(await UserMetaService.getMeta(Uid, 'mobileNumber'));
     UserObj.userId = UserInfo.id;
     UserObj.isConfirmed = UserInfo.isConfirmed;
     UserObj.isBlocked = UserInfo.isBlocked;
