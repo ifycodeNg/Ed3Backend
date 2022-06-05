@@ -8,7 +8,7 @@ const UserMetaService = require('../services/UserMetaService');
 const SignUp = async (req, res, next) => {
   const { email } = req.body;
   const pword = req.body.password;
-  const role = 'user';
+  const role = 'admin';
 
   const generateHash = function (pwrd) {
     return bcrypt.hashSync(pwrd, bcrypt.genSaltSync(8), null);
