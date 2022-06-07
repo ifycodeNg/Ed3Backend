@@ -123,7 +123,7 @@ router.get('/password/reset/:userId/user', PasswordResetController.PasswordReset
 
 router.get('/profile/:id', isAuthenticated, ProfilePerUser);
 
-router.get('/profile', isAuthenticated, AllUserProfileController);
+router.get('/users', isAuthenticated, AllUserProfileController);
 
 router.get('/election', isAuthenticated, AllElections);
 

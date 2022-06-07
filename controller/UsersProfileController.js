@@ -13,11 +13,12 @@ const AllUserProfile = async (req, res) => {
       const EachUser = UserFound[i];
 
       const UID = EachUser.id;
-      UserObj.UserId = UID;
+      UserObj.userID = UID;
 
-      UserObj.isConfirmed = EachUser.isConfirmed;
-      UserObj.isBlocked = EachUser.isBlocked;
+      UserObj.isConfirmed = Number(EachUser.isConfirmed);
+      UserObj.isBlocked = Number(EachUser.isBlocked);
       UserObj.email = EachUser.email;
+      UserObj.role = EachUser.role;
 
       UserObj.firstName = await UserMetaService.getMeta(UID, 'firstName');
 
@@ -25,7 +26,6 @@ const AllUserProfile = async (req, res) => {
       UserObj.gender = await UserMetaService.getMeta(UID, 'gender');
       UserObj.isProfileComplete = Number(await UserMetaService.getMeta(UID, 'isProfileComplete'));
       UserObj.profilePic = await UserMetaService.getMeta(UID, 'profilePic');
-      UserObj.role = await UserMetaService.getMeta(UID, 'role');
       UserObj.telephone = Number(await UserMetaService.getMeta(UID, 'telephone'));
 
       Users.push(UserObj);
@@ -34,7 +34,9 @@ const AllUserProfile = async (req, res) => {
     res.status(201).json(Users);
   }
 
-  res.status(200).json({ message: 'Something Went Wrong' });
+  return null;
+
+  // res.status(200).json({ message: 'Something Went Wrong' });
 };
 
 module.exports = AllUserProfile;
