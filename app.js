@@ -44,9 +44,6 @@ app.use((req, res, next) => {
 
 app.use('/api', routes);
 
-sequelize.sequelize.sync().then(result=>{
-
-}).catch(err=>console.log(err))
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
