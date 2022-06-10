@@ -20,7 +20,11 @@ module.exports = (sequelize, type) => {
       notEmpty: true,
       unique: false,
     },
-
+    eid : {
+      type: type.INTEGER,
+      notEmpty: true,
+      unique: false,
+    },
     otherNames: {
       type: type.STRING,
       notEmpty: true,

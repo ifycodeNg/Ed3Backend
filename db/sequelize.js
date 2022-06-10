@@ -7,7 +7,7 @@ const ElectionModel = require('./models/elections');
 const DirectoryModel = require('./models/directory');
 const TokenModel = require('./models/token');
 const FileModel = require('./models/file');
-
+const ContactModel = require('./models/contacts')
 const config = require('../config/secret');
 
 const sequelize = new Sequelize(
@@ -42,6 +42,7 @@ const Directory = DirectoryModel(sequelize, Sequelize);
 const Election = ElectionModel(sequelize, Sequelize);
 const Token = TokenModel(sequelize, Sequelize);
 const File = FileModel(sequelize, Sequelize);
+const Contact = ContactModel(sequelize, Sequelize);
 
 sequelize.sync({ force: false }).then(() => {
   // console.clear();
@@ -52,6 +53,7 @@ module.exports = {
   User,
   sequelize,
   File,
+  Contact,
   Usermeta,
   Directory,
   Token,
