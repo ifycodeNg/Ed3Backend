@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const path = require('path');
 const multer = require('multer');
+const csv = require('csvtojson');
 const secret = require('../config/secret');
 
 const SignUpController = require('../controller/SignUpController');
@@ -23,17 +24,19 @@ const EditElection = require('../controller/EditElectionController');
 const ViewElection = require('../controller/ViewElectionController');
 
 
+
+
 const checkFileName = (name) => {
   // if (name === 'contactDoc') {
   //   const cs = path.join(__dirname, '../uploads/');
   //   return cs;
   // }
   if (name === 'profilePic') {
-    console.log('Single file');
     const cs = path.join(__dirname, '../public/uploads/images');
     return cs;
   }
-  if (name === 'contactFile') {
+  if (name === 'contactList') {
+    console.log('Single file');
     const cs = path.join(__dirname, '../public/uploads/contacts');
 
     // return 'public/uploads/images';
@@ -44,13 +47,16 @@ const checkFileName = (name) => {
 };
 
 const storage = multer.diskStorage({
+
   destination(req, file, cb) {
+
     cb(null, checkFileName(file.fieldname));
   },
   filename: async (req, file, cb) => {
     const dName = file.fieldname;
     const ogName = file.originalname;
     const fName = `${dName}-${Date.now()}${path.extname(ogName)}`;
+
     cb(null, fName);
   },
   onError(err, next) {
@@ -70,8 +76,9 @@ const singleFileFilter = async (req, file, cb) => {
       req.fileValidationError = 'Forbidden Extension';
       return cb(null, false, req.fileValidationError);
     }
-  } else if (file.fieldname === 'contactsFile') {
+  } else if (file.fieldname === 'contactList') {
     if (file.mimetype === 'text/csv') {
+    
       cb(null, true);
     } else {
       req.fileValidationError = 'Forbidden Extension';
@@ -115,8 +122,6 @@ const isAuthenticated = (req, res, next) => {
   }
 };
 
-// router.get('/verify/:id/user', EmailVerifyController);
-
 router.get('/verify_email', EmailVerifyController);
 
 router.get('/password/reset/:userId/user', PasswordResetController.PasswordResetController);
@@ -127,7 +132,7 @@ router.get('/users', isAuthenticated, AllUserProfileController);
 
 router.get('/elections', isAuthenticated, AllElections);
 
-router.get('/election/:ElectionId', isAuthenticated, ViewElection);
+router.get('/election/:electionId', isAuthenticated, ViewElection);
 
 // POST REQUESTS
 
@@ -144,7 +149,7 @@ router.post('/election', isAuthenticated, AddElectionController);
 // uploadFile a file
 const fileUpload = uploadFile.fields([
   { name: 'profilePic' },
-  { name: 'contactList'},
+  { name: 'contactList' },
 ]);
 router.post(
   '/fileupload',
@@ -152,25 +157,13 @@ router.post(
   FileUploadController,
 );
 
-// uploadFile a file
-// const profilePicUpload = uploadFile.single('profilePic');
-// router.post(
-//   '/profile_picture_upload',
-//   [isAuthenticated, profilePicUpload],
-//   FileUploadController.ProfileImageUpload,
-// );
-
-// const fileUpload = uploadFile.fields([{ name: 'profileImage' }]);
-// router.post('/fileupload/:name', profileImageUpload, fileRoute.filePOST);
-
 router.post('/profile', isAuthenticated, ProfileCreateController);
 
 router.post('/create/user', isAuthenticated, CreateUserController);
 
-
 // PUT REQUESTS
 // update user
-router.put('/election/:ElectionId', isAuthenticated, EditElection);
+router.put('/election/:electionId', isAuthenticated, EditElection);
 
 router.put('/user/:id', isAuthenticated, UpdateUserController);
 

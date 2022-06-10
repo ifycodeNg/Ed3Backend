@@ -11,9 +11,9 @@ module.exports = (sequelize, type) => {
       unique: false,
     },
     mobileNumber: {
-      type: type.INTEGER,
-      notEmpty: true,
+      type: type.BIGINT,
       unique: false,
+      allowNull: false
     },
   };
   return sequelize.define('contacts', fields);

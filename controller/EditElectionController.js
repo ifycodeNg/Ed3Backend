@@ -1,7 +1,7 @@
 const { UpdateElection } = require('../services/ElectionService');
 
 const EditElection = async (req, res) => {
-  const { ElectionId } = req.params;
+  const { electionId } = req.params;
   const {
     name, election_level, date,
     active_period,
@@ -15,7 +15,7 @@ const EditElection = async (req, res) => {
     location,
     active_period,
   };
-  const Update = await UpdateElection(data, ElectionId);
+  const Update = await UpdateElection(data, electionId);
   if (!Update) {
     res.status(200).json({
       success: false,

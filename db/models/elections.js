@@ -5,7 +5,12 @@ module.exports = (sequelize, type) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    electionName: {
+    userId:{
+      type: type.INTEGER,
+      notEmpty: true,
+      unique: false
+    },
+    name: {
       type: type.STRING,
       notEmpty: true,
       unique: false,

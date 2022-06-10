@@ -74,38 +74,6 @@ const getAllUsers = async () => {
 };
 
 const CreateUser = async (req) => {
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   const { email, password } = req.body;
   const newPassword = bcrypt.hashSync(password, 10);
   const metaObj = {};
@@ -167,54 +135,6 @@ const CreateUser = async (req) => {
 
   };
 };
-// const checkMeta = async (UserId) => {
-//   FindUserById = User.Usermeta.findAll({
-//     where: {
-//       userID: UserId,
-//     },
-//   });
-
-//   const AwaituserFound = await FindUserById;
-
-//   if (Array.isArray(AwaituserFound) && AwaituserFound.length == 0
-//   ) {
-//     return false;
-//   }
-
-//   return FindUserById;
-// };
-// const create = async (req) => {
-//   const { email, password } = req.body;
-//   const UserInfo = req.body;
-//   const newPassword = bcrypt.hashSync(password, 10);
-//   const metaObj = {};
-//   metaObj.role = 'user';
-//   metaObj.isProfileComplete = 1;
-
-//   metaObj.firstName = UserInfo.firstName;
-//   metaObj.lastName = UserInfo.lastName;
-//   metaObj.middleName = UserInfo.middleName;
-//   metaObj.telephone = UserInfo.telephone;
-//   metaObj.gender = UserInfo.gender;
-
-//   token = crypto.randomBytes(32).toString('hex');
-//   const query = await User.User.create({
-//     email,
-//     password: newPassword,
-//     confirmationToken: token,
-//     isConfirmed: 1,
-//   });
-
-//   const { id } = query.dataValues;
-//   for (const key in metaObj) {
-//     const meta_query = await User.Usermeta.create({
-//       userID: id,
-//       key,
-//       value: metaObj[key],
-
-//     });
-//   }
-// };
 
 const updateUser = async (id, key, val) => {
   const Udate = sequelize.User.update(

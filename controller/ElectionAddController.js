@@ -4,6 +4,11 @@ const AddElection = async (req, res) => {
   const {
     electionName, dateOfElection, level, electionType, location,
   } = req.body;
+  
+  const { uid } = req.body;
+  const {name, election_level, date,
+    active_period,
+    location} = req.body
 
   const data = {
     electionName,
@@ -11,6 +16,9 @@ const AddElection = async (req, res) => {
     level,
     electionType,
     location,
+    active_period,
+    userId:uid
+
   };
 
   const createElection = await ElectionService.AddElection(data);
