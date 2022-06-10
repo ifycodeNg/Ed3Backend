@@ -125,7 +125,7 @@ router.get('/profile/:id', isAuthenticated, ProfilePerUser);
 
 router.get('/users', isAuthenticated, AllUserProfileController);
 
-router.get('/election', isAuthenticated, AllElections);
+router.get('/elections', isAuthenticated, AllElections);
 
 router.get('/election/:ElectionId', isAuthenticated, ViewElection);
 

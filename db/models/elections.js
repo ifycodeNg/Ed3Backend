@@ -5,13 +5,23 @@ module.exports = (sequelize, type) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
+    electionName: {
       type: type.STRING,
       notEmpty: true,
       unique: false,
     },
-    date: {
+    electionType: {
+      type: type.STRING,
+      notEmpty: true,
+      unique: false,
+    },
+    dateOfElection: {
       type: type.DATEONLY,
+      notEmpty: true,
+      unique: false,
+    },
+    level: {
+      type: type.STRING,
       notEmpty: true,
       unique: false,
     },
@@ -19,14 +29,6 @@ module.exports = (sequelize, type) => {
       type: type.STRING,
       notEmpty: true,
       unique: false,
-    },
-    active_period: {
-      type: type.INTEGER,
-      notEmpty: true,
-      unique: false,
-    },
-    election_level: {
-      type: type.ENUM('nationwide', 'State', 'FC', 'SD', 'LGA', 'ward', 'Unit'),
     },
 
   };

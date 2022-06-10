@@ -11,12 +11,12 @@ const ListAllElection = async (req, res) => {
     const ElectionObj = {};
     const EachElection = AllElections[i];
     ElectionObj.id = EachElection.id;
-    ElectionObj.UserId = EachElection.userId;
-    ElectionObj.Name = EachElection.name;
-    ElectionObj.Date = EachElection.date;
-    ElectionObj.Location = EachElection.location;
-    ElectionObj.ActivePeriod = EachElection.active_period;
-    ElectionObj.ElectionLevel = EachElection.election_level;
+    ElectionObj.createdBy = EachElection.createdBy;
+    ElectionObj.electionName = EachElection.electionName;
+    ElectionObj.dateOfElection = EachElection.dateOfElection;
+    ElectionObj.electionType = EachElection.electionType;
+    ElectionObj.location = EachElection.location;
+    ElectionObj.level = EachElection.level;
 
     Elections.push(ElectionObj);
   }
