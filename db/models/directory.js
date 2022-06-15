@@ -5,23 +5,23 @@ module.exports = (sequelize, type) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    userID: {
+    eid: {
       type: type.INTEGER,
       notEmpty: true,
       unique: false,
     },
-    fName: {
-      type: type.STRING,
-      notEmpty: true,
-      unique: false,
-    },
-    lName: {
-      type: type.STRING,
-      notEmpty: true,
-      unique: false,
-    },
-    eid : {
+    fileID: {
       type: type.INTEGER,
+      notEmpty: true,
+      unique: false,
+    },
+    firstName: {
+      type: type.STRING,
+      notEmpty: true,
+      unique: false,
+    },
+    lastName: {
+      type: type.STRING,
       notEmpty: true,
       unique: false,
     },
@@ -39,9 +39,26 @@ module.exports = (sequelize, type) => {
     rank: {
       notEmpty: true,
       unique: false,
-      type: type.ENUM('REC', 'Director', 'Staff'),
+      type: type.STRING,
 
     },
+    deploymentLevel: {
+      notEmpty: true,
+      unique: false,
+      type: type.STRING,
+
+    },
+    deploymentLocation: {
+      notEmpty: true,
+      unique: false,
+      type: type.STRING,
+
+    },
+    createdBy: {
+      type: type.INTEGER,
+      notEmpty: true,
+      unique: false,
+    },
   };
-  return sequelize.define('Directory', fields);
+  return sequelize.define('directory', fields);
 };

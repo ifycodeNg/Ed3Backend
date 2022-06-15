@@ -5,7 +5,7 @@ module.exports = (sequelize, type) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    directory_id: {
+    directoryID: {
       type: type.INTEGER,
       notEmpty: true,
       unique: false,

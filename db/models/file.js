@@ -10,6 +10,11 @@ module.exports = (sequelize, type) => {
       notEmpty: true,
       unique: false,
     },
+    fileName: {
+      type: type.STRING,
+      notEmpty: true,
+      unique: true,
+    },
     path: {
       type: type.STRING,
       notEmpty: true,

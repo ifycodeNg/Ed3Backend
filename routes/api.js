@@ -22,9 +22,9 @@ const AddElectionController = require('../controller/ElectionAddController');
 const AllElections = require('../controller/ListAllElectionController');
 const EditElection = require('../controller/EditElectionController');
 const ViewElection = require('../controller/ViewElectionController');
-
-
-
+const AllDirectories = require('../controller/AllDirectoryController');
+const AllFiles = require('../controller/AllFilesController');
+const DirectoryWithFileID = require('../controller/DirectoryWithFileID');
 
 const checkFileName = (name) => {
   // if (name === 'contactDoc') {
@@ -35,9 +35,9 @@ const checkFileName = (name) => {
     const cs = path.join(__dirname, '../public/uploads/images');
     return cs;
   }
-  if (name === 'contactList') {
+  if (name === 'directoryFile') {
     console.log('Single file');
-    const cs = path.join(__dirname, '../public/uploads/contacts');
+    const cs = path.join(__dirname, '../public/uploads/files');
 
     // return 'public/uploads/images';
     return cs;
@@ -76,7 +76,7 @@ const singleFileFilter = async (req, file, cb) => {
       req.fileValidationError = 'Forbidden Extension';
       return cb(null, false, req.fileValidationError);
     }
-  } else if (file.fieldname === 'contactList') {
+  } else if (file.fieldname === 'directoryFile') {
     if (file.mimetype === 'text/csv') {
     
       cb(null, true);
@@ -134,6 +134,12 @@ router.get('/elections', isAuthenticated, AllElections);
 
 router.get('/election/:electionId', isAuthenticated, ViewElection);
 
+router.get('/directories', isAuthenticated, AllDirectories);
+
+router.get('/directory/:fileID', isAuthenticated, DirectoryWithFileID);
+
+router.get('/files', isAuthenticated, AllFiles);
+
 // POST REQUESTS
 
 router.post('/login', LoginController);
@@ -149,7 +155,7 @@ router.post('/election', isAuthenticated, AddElectionController);
 // uploadFile a file
 const fileUpload = uploadFile.fields([
   { name: 'profilePic' },
-  { name: 'contactList' },
+  { name: 'directoryFile' },
 ]);
 router.post(
   '/fileupload',

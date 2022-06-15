@@ -2,13 +2,8 @@ const ElectionService = require('../services/ElectionService');
 
 const AddElection = async (req, res) => {
   const {
-    electionName, dateOfElection, level, electionType, location,
+    electionName, dateOfElection, level, electionType, location, uid,
   } = req.body;
-  
-  const { uid } = req.body;
-  const {name, election_level, date,
-    active_period,
-    location} = req.body
 
   const data = {
     electionName,
@@ -16,8 +11,7 @@ const AddElection = async (req, res) => {
     level,
     electionType,
     location,
-    active_period,
-    userId:uid
+    createdBy: uid,
 
   };
 
