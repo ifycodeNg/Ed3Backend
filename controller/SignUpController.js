@@ -7,6 +7,7 @@ const UserMetaService = require('../services/UserMetaService');
 
 const SignUp = async (req, res, next) => {
   const { email } = req.body;
+  console.log(email)
   const pword = req.body.password;
   const role = 'admin';
 
@@ -52,11 +53,12 @@ const SignUp = async (req, res, next) => {
       return createU;
     })
     .catch((err) => {
+      console.log(err)
       next(err);
     });
 
   const awaitingOut = await dataEntry;
-
+  console.log(awaitingOut)
   const uID = awaitingOut.id;
 
   const profileKey = 'isProfileComplete';
