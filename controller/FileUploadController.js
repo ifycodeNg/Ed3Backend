@@ -1,6 +1,5 @@
 const csv = require('csvtojson');
 const R = require('ramda');
-const pathModule = require('path')
 const UserMetaService = require('../services/UserMetaService');
 const DirectoryService = require('../services/DirectoryService');
 const ContactService = require('../services/ContactService');
@@ -19,7 +18,7 @@ const FileUploadController = async (req, res) => {
   const checkMediaPath = async (path) => {
     if (path !== undefined) {
       const pathToSlice = path.path;
-      const fileUrl = pathToSlice.slice(56);
+      const fileUrl = pathToSlice.slice(23);
       return fileUrl;
     }
     return null;

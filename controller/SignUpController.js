@@ -58,7 +58,6 @@ const SignUp = async (req, res, next) => {
     });
 
   const awaitingOut = await dataEntry;
-  console.log(awaitingOut)
   const uID = awaitingOut.id;
 
   const profileKey = 'isProfileComplete';
