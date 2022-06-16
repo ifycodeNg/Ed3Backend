@@ -1,6 +1,7 @@
 module.exports = {
-  baseUrl: process.env.BASE_URL || 'http://localhost:7000',
+  baseUrl: 'https://188.166.168.117' || 'http://localhost:7000',
   dbUser: process.env.DB_USER || 'root',
+  Devenv : 'Local' || 'Prod' ,
   dbPassword: process.env.DB_PASSWORD || 'Password1230',
   nodePort: '7000',
   MAIL_URL: 'https://142.93.63.5/api/email/',

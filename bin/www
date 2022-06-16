@@ -4,11 +4,14 @@
  * Module dependencies.
  */
 const http = require('http');
+const fs = require('fs');
+const https = require('https');
 const debug = require('debug')('notifia-backend:server');
 const app = require('../app');
-const { nodePort } = require('../config/secret');
+const { nodePort, Devenv } = require('../config/secret');
 const config = require('../config/secret');
 
+let server ;
 /**
    * Normalize a port into a number, string, or false.
    */
@@ -42,7 +45,16 @@ app.set('port', port);
    * Create HTTP server.
    */
 
-const server = http.createServer(app);
+if (Devenv === 'Local') {
+  server = http.createServer(app);
+} else if (Devenv === 'Prod') {
+  const options = {
+  	key: fs.readFileSync('/etc/ssl/private.key'),
+  	cert: fs.readFileSync('/etc/ssl/certificate.crt'),
+
+  };
+  server = https.createServer(options, app);
+}
 
 /**
    * Event listener for HTTP server "error" event.
@@ -78,7 +90,7 @@ function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
   debug(`Listening on ${bind}`);
-  console.log(`Server Running on ${addr.address} ${nodePort}`)
+  console.log(`Server Running on ${addr.address} ${nodePort}`);
 }
 
 /**
