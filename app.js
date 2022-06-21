@@ -3,25 +3,26 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
 const helmet = require('helmet');
 const cors = require('cors');
-
 const sequelize = require('./db/sequelize');
 
 const routes = require('./routes/api');
 
 const app = express();
 
-app.use(helmet());
+//app.use(helmet());
+
 
 const corsOptions = {
-  origin: '*',
+  origin: 'https://ed3.apptestenv.com',
   credentials: true, // access-control-allow-credentials:true
   optionSuccessStatus: 200,
-};
+ };
 
 app.use(cors(corsOptions));
+
+
 
 // view engine setup
 
@@ -30,6 +31,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/uploads')));
+
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -39,6 +42,7 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Headers',
     'Authorization, Origin, Content-Type, Accept',
   );
+        res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
   next();
 });
 

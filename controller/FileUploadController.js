@@ -18,9 +18,7 @@ const FileUploadController = async (req, res) => {
   const checkMediaPath = async (path) => {
     if (path !== undefined) {
       const pathToSlice = path.path;
-
-      const fileUrl = pathToSlice.slice(37);
-
+      const fileUrl = pathToSlice.slice(23);
       return fileUrl;
     }
     return null;
@@ -102,18 +100,6 @@ const FileUploadController = async (req, res) => {
             };
             await ContactService.AddContact(contactData);
           }
-
-          // if (createDirectory) {
-          //   res.type('application/json');
-          //   return res.status(201).json({ msg: 'Successfull' });
-          // } else {
-          //   res.type('application/json');
-          //   return res.status(200).json({ msg: 'Something went wrong' });
-          // }
-          // }
-
-          // check if lop is finished
-
           if (contacts.length - 1 === i) {
             res.type('application/json');
             return res.status(201).json({ msg: 'Successfull' });

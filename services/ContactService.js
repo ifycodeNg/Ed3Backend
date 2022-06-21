@@ -18,17 +18,6 @@ const AddContact = async (data) => {
 
   const output = await nMeta;
   return output;
-
-  // const output = await nMeta;
-  // return output;
-  //   console.log('hello2');
-  //   const query = Model.Contact.create({
-  //     directory_id: UserInfo.directoryId,
-  //     mobileNumber: UserInfo.telephone,
-
-  //   });
-
-//   return query;
 };
 
 const getContactWithDirectoryID = async (did) => {

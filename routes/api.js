@@ -27,10 +27,6 @@ const AllFiles = require('../controller/AllFilesController');
 const DirectoryWithFileID = require('../controller/DirectoryWithFileID');
 
 const checkFileName = (name) => {
-  // if (name === 'contactDoc') {
-  //   const cs = path.join(__dirname, '../uploads/');
-  //   return cs;
-  // }
   if (name === 'profilePic') {
     const cs = path.join(__dirname, '../public/uploads/images');
     return cs;

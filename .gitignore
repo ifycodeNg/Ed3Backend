@@ -17,12 +17,6 @@ node_modules/
 .DS_Store
 *.pem
 
-controller/DirectoryController.js
-controller/UserController.js
-controller/UploadController.js
-
-utility/DirectoryService.js
-utility/DirectoryUploadService.js
 
 
 # debug
