@@ -15,7 +15,7 @@ const app = express();
 
 
 const corsOptions = {
-  origin: 'https://ed3.apptestenv.com',
+  origin: '*',
   credentials: true, // access-control-allow-credentials:true
   optionSuccessStatus: 200,
  };

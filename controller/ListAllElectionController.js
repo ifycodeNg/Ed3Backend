@@ -7,7 +7,8 @@ const ListAllElection = async (req, res) => {
   if (!AllElections) {
     return res.status(200).json({});
   }
-  for (let i = 0; i < AllElections.length; i++) {
+  const elen = AllElections.length;
+  for (let i = 0; i < elen; i++) {
     const ElectionObj = {};
     const EachElection = AllElections[i];
     ElectionObj.id = EachElection.id;

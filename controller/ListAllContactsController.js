@@ -1,10 +1,8 @@
 const DirectoryService = require('../services/DirectoryService');
 const ContactService = require('../services/ContactService');
 
-const DirectoryWithFileID = async (req, res) => {
-  const { fileID } = req.params;
-
-  const getDirs = await DirectoryService.GetAllDirectoryWithFileID(fileID);
+const ListAllContacts = async (req, res) => {
+  const getDirs = await DirectoryService.getAllDirectory();
 
   if (getDirs) {
     const dirArr = [];
@@ -29,7 +27,7 @@ const DirectoryWithFileID = async (req, res) => {
       newObj.deploymentLocation = element.deploymentLocation;
       newObj.deploymentLevel = element.deploymentLevel;
 
-      newObj.mobileNumber = getContact.mobileNumber;
+      newObj.mobileNumber = `0${getContact.mobileNumber}`;
 
       dirArr.push(newObj);
     }
@@ -42,4 +40,4 @@ const DirectoryWithFileID = async (req, res) => {
   return res.status(200).json({ msg: 'Something went wrong' });
 };
 
-module.exports = DirectoryWithFileID;
+module.exports = ListAllContacts;

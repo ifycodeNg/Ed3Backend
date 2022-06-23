@@ -25,6 +25,7 @@ const ViewElection = require('../controller/ViewElectionController');
 const AllDirectories = require('../controller/AllDirectoryController');
 const AllFiles = require('../controller/AllFilesController');
 const DirectoryWithFileID = require('../controller/DirectoryWithFileID');
+const AllContacts = require('../controller/ListAllContactsController');
 
 const checkFileName = (name) => {
   if (name === 'profilePic') {
@@ -135,6 +136,8 @@ router.get('/directories', isAuthenticated, AllDirectories);
 router.get('/directory/:fileID', isAuthenticated, DirectoryWithFileID);
 
 router.get('/files', isAuthenticated, AllFiles);
+
+router.get('/contacts', isAuthenticated, AllContacts);
 
 // POST REQUESTS
 

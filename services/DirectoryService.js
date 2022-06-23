@@ -89,9 +89,30 @@ const AddFilePath = async (userID, fileName, path) => {
   const output = await nMeta;
   return output;
 };
+
+const getAllDirectory = async () => {
+  const directoryFound = sequelize.Directory.findAll().then((dirFound) => {
+    if (!dirFound) {
+      return false;
+    }
+
+    if (dirFound) {
+      return dirFound;
+    }
+    return dirFound;
+  })
+    .catch((err) => {
+      throw err;
+    });
+
+  const dirsFound = await directoryFound;
+  return dirsFound;
+};
+
 module.exports = {
   GetAllDirectoriesGroupedByFileID,
   GetAllDirectoryWithFileID,
   AddDirectory,
   AddFilePath,
+  getAllDirectory,
 };
