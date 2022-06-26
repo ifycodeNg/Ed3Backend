@@ -26,6 +26,9 @@ const AllDirectories = require('../controller/AllDirectoryController');
 const AllFiles = require('../controller/AllFilesController');
 const DirectoryWithFileID = require('../controller/DirectoryWithFileID');
 const AllContacts = require('../controller/ListAllContactsController');
+const SingleContact = require('../controller/SingleContactController');
+
+
 
 const checkFileName = (name) => {
   if (name === 'profilePic') {
@@ -138,6 +141,9 @@ router.get('/directory/:fileID', isAuthenticated, DirectoryWithFileID);
 router.get('/files', isAuthenticated, AllFiles);
 
 router.get('/contacts', isAuthenticated, AllContacts);
+
+router.get('/contact/:id', isAuthenticated, SingleContact);
+
 
 // POST REQUESTS
 

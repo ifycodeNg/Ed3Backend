@@ -109,10 +109,34 @@ const getAllDirectory = async () => {
   return dirsFound;
 };
 
+const getSingleDirectory = async (id) => {
+  const dirFound = sequelize.Directory.findOne({
+    where: {
+      id,
+    },
+
+  }).then((dirResult) => {
+    if (!dirResult) {
+      return false;
+    }
+
+    if (dirResult) {
+      return dirResult;
+    }
+    return dirResult;
+  })
+    .catch((err) => {
+      throw err;
+    });
+  const output = await dirFound;
+  return output;
+};
+
 module.exports = {
   GetAllDirectoriesGroupedByFileID,
   GetAllDirectoryWithFileID,
   AddDirectory,
   AddFilePath,
   getAllDirectory,
+  getSingleDirectory,
 };

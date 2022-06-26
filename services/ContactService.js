@@ -42,7 +42,29 @@ const getContactWithDirectoryID = async (did) => {
     });
   const output = await ContatsFound;
   return output;
+};
 
+const getSingleContact = async (id) => {
+  const ContatFound = sequelize.Contact.findOne({
+    where: {
+      id,
+    },
+
+  }).then((contactResult) => {
+    if (!contactResult) {
+      return false;
+    }
+
+    if (contactResult) {
+      return contactResult;
+    }
+    return contactResult;
+  })
+    .catch((err) => {
+      throw err;
+    });
+  const output = await ContatFound;
+  return output;
 };
 
 // const AddContacts = async (UserInfo) => {
@@ -58,4 +80,4 @@ const getContactWithDirectoryID = async (did) => {
 //     return true;
 //   };
 
-module.exports = { AddContact, getContactWithDirectoryID };
+module.exports = { AddContact, getContactWithDirectoryID, getSingleContact };
