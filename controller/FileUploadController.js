@@ -18,7 +18,8 @@ const FileUploadController = async (req, res) => {
   const checkMediaPath = async (path) => {
     if (path !== undefined) {
       const pathToSlice = path.path;
-      const fileUrl = pathToSlice.slice(23);
+      // const fileUrl = pathToSlice.slice(23);
+      const fileUrl = pathToSlice.slice(34);
       return fileUrl;
     }
     return null;

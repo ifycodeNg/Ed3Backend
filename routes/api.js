@@ -27,7 +27,7 @@ const AllFiles = require('../controller/AllFilesController');
 const DirectoryWithFileID = require('../controller/DirectoryWithFileID');
 const AllContacts = require('../controller/ListAllContactsController');
 const SingleContact = require('../controller/SingleContactController');
-
+const UpdateProfileController = require('../controller/UpdateProfileController');
 
 
 const checkFileName = (name) => {
@@ -177,5 +177,10 @@ router.post('/create/user', isAuthenticated, CreateUserController);
 router.put('/election/:electionId', isAuthenticated, EditElection);
 
 router.put('/user/:id', isAuthenticated, UpdateUserController);
+
+
+router.put('/profile/:id', isAuthenticated, UpdateProfileController);
+
+
 
 module.exports = router;

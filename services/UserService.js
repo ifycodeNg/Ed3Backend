@@ -80,7 +80,7 @@ const CreateUser = async (req) => {
   metaObj.role = 'user';
   metaObj.isProfileComplete = 0;
 
-  token = crypto.randomBytes(32).toString('hex');
+  const token = crypto.randomBytes(32).toString('hex');
 
   const data = {
     email,
@@ -165,6 +165,32 @@ const updateUser = async (id, key, val) => {
   return output;
 };
 
+const getUserPassword = async (uid) => {
+  const metaAction = sequelize.User.findOne({
+    where: {
+      id: uid,
+    },
+  })
+    .then((user) => {
+      if (!user) {
+        return false;
+      }
+
+      if (user) {
+        const userDetails = user.get();
+        return userDetails;
+      }
+      return user;
+    })
+    .catch((err) => {
+      throw err;
+    });
+
+  const meA = await metaAction;
+
+  return meA.password;
+};
+
 module.exports = {
   checkUser,
   CreateUser,
@@ -172,6 +198,7 @@ module.exports = {
   // checkMeta,
   getAllUsers,
   updateUser,
+  getUserPassword,
   // create,
 
 };

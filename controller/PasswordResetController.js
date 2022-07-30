@@ -15,7 +15,7 @@ const PasswordGenLink = async (req, res) => {
   console.log(UserFound);
 
   if (UserFound) {
-    const userId = UserFound[0].dataValues.id;
+    const userId = UserFound.id;
     const message = `<a 
     href="http://${config.baseUrl}/api/password/reset/${userId}/user?token=${token}">
     Click here to change your password
@@ -23,24 +23,53 @@ const PasswordGenLink = async (req, res) => {
 
     const Value = 'Password Reset Token';
 
-    await TokenService.SaveToken(token, UserFound[0].dataValues.id, Value);
+    const sndEmail = await EmailService.SendMail(email, 'Password Reset Link', message);
 
-    await EmailService.SendMail(email, 'Password Reset Link', message);
-
-    res.json({
-      msg: 'Please Check Mail for Password Reset Link',
-    });
-  } else if (!UserFound) {
-    res.json({
-      msg: 'Email Address doesnt Exist',
+    if (sndEmail) {
+      const svToken = await TokenService.SaveToken(token, UserFound.id, Value);
+      if (svToken) {
+        res.type('application/json');
+        return res.status(201).json({
+          status: 'ok',
+          body: 'Please Check Mail for Password Reset Link',
+        });
+      }
+      res.type('application/json');
+      return res.status(200).json({
+        status: 'error',
+        body: 'We could not save the token',
+      });
+    }
+    res.type('application/json');
+    return res.status(200).json({
+      status: 'error',
+      body: 'We could not send the email',
     });
   }
+  res.type('application/json');
+  return res.status(200).json({
+    status: 'error',
+    body: 'Email Address doesnt Exist',
+  });
+
+  //   await TokenService.SaveToken(token, UserFound.id, Value);
+
+  //   await EmailService.SendMail(email, 'Password Reset Link', message);
+
+  //   res.json({
+  //     msg: 'Please Check Mail for Password Reset Link',
+  //   });
+  // } else if (!UserFound) {
+  //   res.json({
+  //     msg: 'Email Address doesnt Exist',
+  //   });
+  // }
 };
 
 const PasswordResetController = async (req, res) => {
   const { userId } = req.params;
 
-  tk = req.query.token;
+  const tk = req.query.token;
 
   const findUserByToken = TokenService.findUserByToken(userId, tk);
 

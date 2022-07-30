@@ -1,15 +1,33 @@
-const Model = require('../db/sequelize');
+const sequelize = require('../db/sequelize');
 
-const SaveToken = async (Token, Id, Key) => {
-  const query = await Model.Token.create({
-    userID: Id,
-    token: Token,
-    key: Key,
-  });
+const SaveToken = async (token, userID, key) => {
+  const data = {
+    userID,
+    key,
+    token,
+  };
+
+  const nMeta = sequelize.Token.create(data)
+    .then((newTkn) => {
+      if (!newTkn) {
+        return false;
+      }
+
+      if (newTkn) {
+        return true;
+      }
+      return newTkn;
+    })
+    .catch((err) => {
+      throw err;
+    });
+
+  const output = await nMeta;
+  return output;
 };
 
 const findUserByToken = async (Id, token) => {
-  TokenFound = Model.Token.findAll({
+  TokenFound = sequelize.Token.findAll({
     where: {
       userID: Id,
       token,

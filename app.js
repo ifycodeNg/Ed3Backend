@@ -11,18 +11,15 @@ const routes = require('./routes/api');
 
 const app = express();
 
-//app.use(helmet());
-
+// app.use(helmet());
 
 const corsOptions = {
   origin: '*',
   credentials: true, // access-control-allow-credentials:true
   optionSuccessStatus: 200,
- };
+};
 
 app.use(cors(corsOptions));
-
-
 
 // view engine setup
 
@@ -33,7 +30,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public/uploads')));
 
-
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT');
@@ -42,12 +38,11 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Headers',
     'Authorization, Origin, Content-Type, Accept',
   );
-        res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+  res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
   next();
 });
 
 app.use('/api', routes);
-
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
